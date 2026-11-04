@@ -1,351 +1,426 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { dummyProducts } from '../data/dummyProducts';
-import ProductCard from '../components/ProductCard';
-import { tokens } from '../styles/theme';
-import { ArrowRight, ShieldCheck, Truck, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { api } from '../services/api';
+import { dummyProducts, dummyCategories } from '../data/dummyProducts';
+import ProductCard from '../components/ProductCard';
+import { ArrowRight } from 'lucide-react';
 
-const PageWrap = styled.div`
+const Page = styled.div`
   width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: ${tokens.spacing.space20} ${tokens.spacing.space20} ${tokens.spacing.space24};
+  background: #FFFFFF;
+`;
+
+const HeroSection = styled.section`
+  width: 100%;
+  min-height: 520px;
+  background: linear-gradient(180deg, #0d1e33 0%, #173252 65%, #2a4e75 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: #FFFFFF;
+  padding: 60px 48px;
 
   @media (max-width: 768px) {
-    padding: ${tokens.spacing.space14};
+    padding: 40px 20px;
+    min-height: 420px;
   }
 `;
 
-const EditorialBanner = styled.section`
-  background-color: ${tokens.colors.surface};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space23};
+const HeroContent = styled.div`
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: ${tokens.spacing.space21};
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  margin-bottom: ${tokens.spacing.space22};
-
-  @media (max-width: 960px) {
-    grid-template-columns: 1fr;
-    padding: ${tokens.spacing.space17};
-    gap: ${tokens.spacing.space17};
-  }
-`;
-
-const BannerLeft = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Eyebrow = styled.div`
-  font-size: ${tokens.typography.sizes.textXs};
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: ${tokens.colors.color3};
-  margin-bottom: ${tokens.spacing.space14};
-`;
-
-const Heading = styled.h1`
-  font-size: ${tokens.typography.sizes.textHero};
-  line-height: ${tokens.typography.lineHeights.tight};
-  color: ${tokens.colors.color1};
-  letter-spacing: -0.03em;
-  margin-bottom: ${tokens.spacing.space15};
-
-  @media (max-width: 640px) {
-    font-size: ${tokens.typography.sizes.text3xl};
-  }
-`;
-
-const Subtitle = styled.p`
-  font-size: ${tokens.typography.sizes.textLg};
-  color: ${tokens.colors.color3};
-  line-height: ${tokens.typography.lineHeights.relaxed};
-  margin-bottom: ${tokens.spacing.space20};
-  max-width: 560px;
-`;
-
-const StatsBar = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${tokens.spacing.space14};
-  padding-top: ${tokens.spacing.space17};
-  border-top: 1px solid ${tokens.colors.color5};
-
-  div.stat {
-    span.val {
-      display: block;
-      font-size: ${tokens.typography.sizes.text2xl};
-      letter-spacing: -0.02em;
-      color: ${tokens.colors.color1};
-      margin-bottom: ${tokens.spacing.space1};
-    }
-    span.lbl {
-      font-size: ${tokens.typography.sizes.textXs};
-      color: ${tokens.colors.color3};
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-  }
-`;
-
-const SpotlightCard = styled.div`
-  background: ${tokens.colors.color6};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space20};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-
-  span.badge {
-    position: absolute;
-    top: -10px;
-    background: ${tokens.colors.color1};
-    color: ${tokens.colors.color7};
-    font-size: ${tokens.typography.sizes.textXs};
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: ${tokens.spacing.space3} ${tokens.spacing.space11};
-    border-radius: ${tokens.radii.radiusSm};
-  }
-
-  div.img-box {
-    width: 240px;
-    height: 240px;
-    margin: ${tokens.spacing.space11} 0 ${tokens.spacing.space15};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: ${tokens.radii.radiusSm};
-    }
-  }
-
-  h3 {
-    font-size: ${tokens.typography.sizes.textBase};
-    letter-spacing: 0.04em;
-    margin-bottom: ${tokens.spacing.space7};
-  }
-
-  span.price {
-    font-size: ${tokens.typography.sizes.textXl};
-    letter-spacing: 0.05em;
-    margin-bottom: ${tokens.spacing.space14};
-    color: ${tokens.colors.color1};
-  }
-
-  a.cta {
-    background: ${tokens.colors.color1};
-    color: ${tokens.colors.color7};
-    padding: ${tokens.spacing.space11} ${tokens.spacing.space20};
-    border-radius: ${tokens.radii.radiusSm};
-    font-size: ${tokens.typography.sizes.textXs};
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: ${tokens.spacing.space5};
-    transition: ${tokens.motion.durationBase};
-
-    &:hover {
-      background: #333333;
-    }
-  }
-`;
-
-const SectionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 1px solid ${tokens.colors.color1};
-  padding-bottom: ${tokens.spacing.space11};
-  margin-bottom: ${tokens.spacing.space17};
-  margin-top: ${tokens.spacing.space21};
-
-  h2 {
-    font-size: ${tokens.typography.sizes.text2xl};
-    letter-spacing: 0.06em;
-  }
-
-  span.meta {
-    font-size: ${tokens.typography.sizes.textXs};
-    color: ${tokens.colors.color3};
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: ${tokens.spacing.space17};
-  margin-bottom: ${tokens.spacing.space22};
-`;
-
-const TrustRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${tokens.spacing.space17};
-  margin: ${tokens.spacing.space23} 0;
+  gap: 48px;
 
   @media (max-width: 860px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const TrustCard = styled.div`
-  background: ${tokens.colors.surface};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space20};
-
-  div.icon {
-    margin-bottom: ${tokens.spacing.space14};
-    color: ${tokens.colors.color1};
+const HeroLeft = styled.div`
+  span.tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 10px;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-bottom: 20px;
   }
 
-  h3 {
-    font-size: ${tokens.typography.sizes.textLg};
-    letter-spacing: 0.04em;
-    margin-bottom: ${tokens.spacing.space7};
+  h1 {
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+
+    @media (max-width: 600px) {
+      font-size: 32px;
+    }
   }
 
   p {
-    font-size: ${tokens.typography.sizes.textSm};
-    color: ${tokens.colors.color3};
-    line-height: ${tokens.typography.lineHeights.normal};
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 28px;
+    max-width: 380px;
+  }
+
+  a.btn {
+    background: #FFFFFF;
+    color: #000000;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+`;
+
+const HeroRight = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  img {
+    max-width: 440px;
+    max-height: 400px;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.35));
+  }
+`;
+
+const SectionWrap = styled.section`
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 56px 32px;
+
+  @media (max-width: 768px) {
+    padding: 40px 16px;
+  }
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  a.view-all {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #777777;
+    text-decoration: underline;
+
+    &:hover {
+      color: #000000;
+    }
+  }
+`;
+
+const CarouselRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const FullBanner = styled.section`
+  width: 100%;
+  height: 420px;
+  position: relative;
+  margin: 20px 0 40px;
+  background: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #FFFFFF;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  div.inner {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+
+    h3 {
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    a.pill {
+      background: #FFFFFF;
+      color: #000000;
+      padding: 10px 24px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+`;
+
+const DualGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 56px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const DualCard = styled(Link)`
+  position: relative;
+  height: 380px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #F8F8F8;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+  color: #000000;
+
+  img.bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img.bg {
+    transform: scale(1.03);
+  }
+
+  div.overlay-content {
+    position: relative;
+    z-index: 2;
+
+    h4 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #000000;
+    }
+
+    span.btn-pill {
+      background: rgba(255, 255, 255, 0.95);
+      color: #000000;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  }
+`;
+
+const CategoryPillsRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+
+  @media (max-width: 860px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const CategoryTile = styled(Link)`
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #F5F5F5;
+  aspect-ratio: 1 / 1.2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  span.label {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    align-self: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
 `;
 
 export default function HomePage() {
-  const [featured, setFeatured] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const topRated = [...dummyProducts]
+    .sort((a, b) => b.rating.rate - a.rating.rate)
+    .slice(0, 5);
 
-  useEffect(() => {
-    async function loadData() {
-      setLoading(true);
-      // Fetch 5 Top Rated from Backend API
-      const featData = await api.getFeaturedProducts();
-      const allData = await api.getProducts();
-
-      if (featData && featData.length > 0) {
-        setFeatured(featData);
-      } else {
-        const fallbackTop = [...dummyProducts]
-          .sort((a, b) => b.rating.rate - a.rating.rate)
-          .slice(0, 5);
-        setFeatured(fallbackTop);
-      }
-
-      if (allData && allData.length > 0) {
-        setAllProducts(allData);
-      } else {
-        setAllProducts(dummyProducts);
-      }
-      setLoading(false);
-    }
-    loadData();
-  }, []);
-
-  const topRated = featured.length > 0 ? featured : dummyProducts.slice(0, 5);
-  const remainder = allProducts.filter((p) => !topRated.some((t) => t.id === p.id));
-  const spotlight = topRated[0] || dummyProducts[0];
+  const holidayGifts = dummyProducts.filter(p => p.category === 'sets & gifts' || p.category === 'fragrance');
 
   return (
-    <PageWrap>
-      {/* Editorial Banner */}
-      <EditorialBanner>
-        <BannerLeft>
-          <Eyebrow>SALT &amp; STONE // Performance Essentials</Eyebrow>
-          <Heading>Engineered for the Modern Workspace.</Heading>
-          <Subtitle>
-            A curated portfolio of ergonomic workstation seating, motorized sit-stand architecture, and precision accessories built to elevate focus and productivity.
-          </Subtitle>
-          <StatsBar>
-            <div className="stat">
-              <span className="val">AFRDI 6</span>
-              <span className="lbl">Durability Certified</span>
-            </div>
-            <div className="stat">
-              <span className="val">24HR</span>
-              <span className="lbl">Metro Dispatch</span>
-            </div>
-            <div className="stat">
-              <span className="val">100%</span>
-              <span className="lbl">Commercial Grade</span>
-            </div>
-          </StatsBar>
-        </BannerLeft>
+    <Page>
+      {/* Exact The Holiday Shop Hero banner from screenshot */}
+      <HeroSection>
+        <HeroContent>
+          <HeroLeft>
+            <span className="tag">Holiday 2026</span>
+            <h1>The Holiday Shop</h1>
+            <p>All wrapped up and ready to gift with complimentary bespoke packaging.</p>
+            <Link to="/category/sets%20%26%20gifts" className="btn">
+              Shop The Gift <ArrowRight size={13} />
+            </Link>
+          </HeroLeft>
 
-        <SpotlightCard>
-          <span className="badge">Featured #1</span>
-          <div className="img-box">
-            <img src={spotlight.image} alt={spotlight.title} />
-          </div>
-          <h3>{spotlight.title}</h3>
-          <span className="price">${spotlight.price?.toFixed(2)}</span>
-          <Link to={`/product/${spotlight.id}`} className="cta">
-            View &amp; Enquire <ArrowRight size={12} />
-          </Link>
-        </SpotlightCard>
-      </EditorialBanner>
+          <HeroRight>
+            <img src="/images/holiday-trio.jpg" alt="The Holiday Shop Trio" />
+          </HeroRight>
+        </HeroContent>
+      </HeroSection>
 
-      {/* Featured 5 Top Rated */}
-      <section>
+      {/* Best Sellers (5 Featured Top Rated - Acceptance Criteria) */}
+      <SectionWrap>
         <SectionHeader>
-          <h2>Top Rated Essentials (Featured 5)</h2>
-          <span className="meta">Verified Performance Ranking</span>
+          <h2>Best Sellers</h2>
+          <Link to="/category/deodorant" className="view-all">Shop All (5)</Link>
         </SectionHeader>
-        <Grid>
+
+        <CarouselRow>
           {topRated.map((prod) => (
             <ProductCard key={prod.id} product={prod} />
           ))}
-        </Grid>
-      </section>
+        </CarouselRow>
+      </SectionWrap>
 
-      {/* Trust Signals First */}
-      <TrustRow>
-        <TrustCard>
-          <div className="icon"><ShieldCheck size={20} /></div>
-          <h3>Trust Signals First</h3>
-          <p>Every workstation component is backed by verified commercial load certifications and direct manufacturing warranties.</p>
-        </TrustCard>
-        <TrustCard>
-          <div className="icon"><Truck size={20} /></div>
-          <h3>Clear Path to Action</h3>
-          <p>Single-touch corporate enquiry routing directly connects your team with specialised commercial account managers.</p>
-        </TrustCard>
-        <TrustCard>
-          <div className="icon"><Clock size={20} /></div>
-          <h3>Speed Over Polish</h3>
-          <p>Rapid dispatch schedules and transparent inventory availability across all national distribution centres.</p>
-        </TrustCard>
-      </TrustRow>
+      {/* Editorial Full-width Scent banner */}
+      <FullBanner>
+        <div className="inner">
+          <h3>Iconic Scents. Active Formulas.</h3>
+          <Link to="/category/body%20wash" className="pill">
+            Explore Formulas <ArrowRight size={12} />
+          </Link>
+        </div>
+      </FullBanner>
 
-      {/* Complete Collection */}
-      <section>
+      {/* Dual Featured Featurettes (Discovery Sets + Lily & Yuzu) */}
+      <SectionWrap style={{ paddingTop: 0 }}>
+        <DualGrid>
+          <DualCard to="/category/sets%20%26%20gifts">
+            <img src="/images/discovery-set.jpg" alt="Discovery Sets" className="bg" />
+            <div className="overlay-content">
+              <h4>Explore Discovery Sets</h4>
+              <span className="btn-pill">Shop Now <ArrowRight size={11} /></span>
+            </div>
+          </DualCard>
+
+          <DualCard to="/product/5">
+            <img src="/images/perfume-lily.jpg" alt="Lily & Yuzu Perfume" className="bg" />
+            <div className="overlay-content">
+              <h4>Lily &amp; Yuzu Perfume</h4>
+              <span className="btn-pill">Shop Now <ArrowRight size={11} /></span>
+            </div>
+          </DualCard>
+        </DualGrid>
+
+        {/* Holiday Gifts Row */}
         <SectionHeader>
-          <h2>All Catalogue Items</h2>
-          <span className="meta">Showing {remainder.length} additional items</span>
+          <h2>Holiday Gifts</h2>
+          <Link to="/category/sets%20%26%20gifts" className="view-all">View All</Link>
         </SectionHeader>
-        <Grid>
-          {remainder.map((prod) => (
+
+        <CarouselRow>
+          {holidayGifts.slice(0, 5).map((prod) => (
             <ProductCard key={prod.id} product={prod} />
           ))}
-        </Grid>
-      </section>
-    </PageWrap>
+        </CarouselRow>
+
+        {/* Shop By Category Visual Pill Section */}
+        <SectionHeader style={{ marginTop: 48 }}>
+          <h2>Shop by Category</h2>
+          <span style={{ fontSize: 11, letterSpacing: '0.08em', color: '#888' }}>6 Collections</span>
+        </SectionHeader>
+
+        <CategoryPillsRow>
+          <CategoryTile to="/category/deodorant">
+            <img src="/images/deodorant-hero.jpg" alt="Deodorant" />
+            <span className="label">Deodorant</span>
+          </CategoryTile>
+          <CategoryTile to="/category/body%20wash">
+            <img src="/images/body-wash.jpg" alt="Body Wash" />
+            <span className="label">Body Wash</span>
+          </CategoryTile>
+          <CategoryTile to="/category/fragrance">
+            <img src="/images/perfume-lily.jpg" alt="Fragrance" />
+            <span className="label">Fragrance</span>
+          </CategoryTile>
+          <CategoryTile to="/category/body%20mist">
+            <img src="/images/body-mist.jpg" alt="Body Mist" />
+            <span className="label">Body Mist</span>
+          </CategoryTile>
+          <CategoryTile to="/category/body%20oil">
+            <img src="/images/body-oil.jpg" alt="Body Oil" />
+            <span className="label">Body Oil</span>
+          </CategoryTile>
+        </CategoryPillsRow>
+      </SectionWrap>
+    </Page>
   );
 }
