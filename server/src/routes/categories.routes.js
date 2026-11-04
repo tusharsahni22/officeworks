@@ -9,3 +9,4 @@ router.get('/', productController.getCategories);
 router.get('/:categoryName', productController.getCategoryProducts);
 
 module.exports = router;
+

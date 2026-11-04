@@ -9,3 +9,4 @@ router.post('/', enquiryController.createEnquiry);
 router.get('/', enquiryController.getEnquiries);
 
 module.exports = router;
+

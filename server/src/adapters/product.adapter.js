@@ -179,3 +179,4 @@ class ProductAdapter {
 
 module.exports = new ProductAdapter();
 module.exports.FALLBACK_PRODUCTS = FALLBACK_PRODUCTS;
+

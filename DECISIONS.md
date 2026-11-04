@@ -50,3 +50,4 @@ The entrepreneur emphasized not wanting a throwaway prototype. We implemented cl
 3. **Caching Layer**: Integrate Redis / AWS ElastiCache on `/api/products` and `/api/products/featured` with TTL invalidation.
 4. **End-to-End (E2E) Testing**: Add Cypress or Playwright tests simulating the complete user journey: Browse -> Search -> Open Modal -> Submit Enquiry -> Verify Confirmation.
 5. **Admin Dashboard**: Build an internal route `/admin/enquiries` for the sales team to review, triage, and reply to customer inquiries.
+

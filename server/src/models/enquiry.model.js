@@ -45,3 +45,4 @@ const enquirySchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.models.Enquiry || mongoose.model('Enquiry', enquirySchema);
+

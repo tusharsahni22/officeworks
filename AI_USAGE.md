@@ -50,3 +50,4 @@ This document transparently records how AI tools were directed to plan, scaffold
 | **Backend API & Adapters** | ~35 mins | Node.js Express layered architecture, product adapter, notification service, Jest tests. |
 | **Testing & Review** | ~20 mins | Integration test suite, Docker setup, DECISIONS.md, AI_USAGE.md. |
 | **Total** | **~2 hours 10 mins** | Well within the 2–3 hour timebox. |
+
