@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const productRoutes = require('./routes/products.routes');
 const categoryRoutes = require('./routes/categories.routes');
@@ -30,7 +31,24 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/enquiries', enquiryRoutes);
 
-// 404 Handler
+// Serve compiled React frontend if present (Unified Single Docker Container)
+const publicDir = path.join(__dirname, '../public');
+app.use(express.static(publicDir));
+
+// Fallback to React app for client-side routing on non-API routes
+app.get('*', (req, res, next) => {
+  if (req.originalUrl.startsWith('/api')) {
+    return next();
+  }
+  const indexPath = path.join(publicDir, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      next();
+    }
+  });
+});
+
+// 404 Handler for API
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -48,4 +66,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-
