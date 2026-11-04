@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { dummyProducts, dummyCategories } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck, Headphones } from 'lucide-react';
 
 const Page = styled.div`
   width: 100%;
@@ -12,8 +12,8 @@ const Page = styled.div`
 
 const HeroSection = styled.section`
   width: 100%;
-  min-height: 520px;
-  background: linear-gradient(180deg, #0d1e33 0%, #173252 65%, #2a4e75 100%);
+  min-height: 500px;
+  background: linear-gradient(180deg, #0f1c2e 0%, #172a44 65%, #1e3557 100%);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -69,7 +69,8 @@ const HeroLeft = styled.div`
     font-size: 14px;
     opacity: 0.85;
     margin-bottom: 28px;
-    max-width: 380px;
+    max-width: 440px;
+    line-height: 1.6;
   }
 
   a.btn {
@@ -99,9 +100,10 @@ const HeroRight = styled.div`
 
   img {
     max-width: 440px;
-    max-height: 400px;
+    max-height: 380px;
     object-fit: contain;
     filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.35));
+    border-radius: 8px;
   }
 `;
 
@@ -154,53 +156,6 @@ const CarouselRow = styled.div`
   }
 `;
 
-const FullBanner = styled.section`
-  width: 100%;
-  height: 420px;
-  position: relative;
-  margin: 20px 0 40px;
-  background: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #FFFFFF;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-  }
-
-  div.inner {
-    position: relative;
-    z-index: 2;
-    padding: 20px;
-
-    h3 {
-      font-size: 32px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-      margin-bottom: 20px;
-    }
-
-    a.pill {
-      background: #FFFFFF;
-      color: #000000;
-      padding: 10px 24px;
-      border-radius: 9999px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-  }
-`;
-
 const DualGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -222,7 +177,7 @@ const DualCard = styled(Link)`
   flex-direction: column;
   justify-content: flex-end;
   padding: 32px;
-  color: #000000;
+  color: #FFFFFF;
 
   img.bg {
     position: absolute;
@@ -230,6 +185,7 @@ const DualCard = styled(Link)`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(0.65);
     transition: transform 0.4s ease;
   }
 
@@ -245,11 +201,10 @@ const DualCard = styled(Link)`
       font-size: 20px;
       font-weight: 600;
       margin-bottom: 12px;
-      color: #000000;
     }
 
     span.btn-pill {
-      background: rgba(255, 255, 255, 0.95);
+      background: #FFFFFF;
       color: #000000;
       padding: 8px 18px;
       border-radius: 9999px;
@@ -260,7 +215,6 @@ const DualCard = styled(Link)`
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
   }
 `;
@@ -279,7 +233,7 @@ const CategoryTile = styled(Link)`
   border-radius: 8px;
   overflow: hidden;
   background-color: #F5F5F5;
-  aspect-ratio: 1 / 1.2;
+  aspect-ratio: 1 / 1.1;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -291,13 +245,14 @@ const CategoryTile = styled(Link)`
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 16px;
   }
 
   span.label {
     position: relative;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 6px 14px;
     border-radius: 9999px;
     font-size: 11px;
@@ -314,24 +269,26 @@ export default function HomePage() {
     .sort((a, b) => b.rating.rate - a.rating.rate)
     .slice(0, 5);
 
-  const holidayGifts = dummyProducts.filter(p => p.category === 'sets & gifts' || p.category === 'fragrance');
+  const technologyPicks = dummyProducts.filter(p => p.category === 'technology & monitors');
 
   return (
     <Page>
-      {/* Exact The Holiday Shop Hero banner from screenshot */}
+      {/* Eye-catching Hero banner with workplace items */}
       <HeroSection>
         <HeroContent>
           <HeroLeft>
-            <span className="tag">Holiday 2026</span>
-            <h1>The Holiday Shop</h1>
-            <p>All wrapped up and ready to gift with complimentary bespoke packaging.</p>
-            <Link to="/category/sets%20%26%20gifts" className="btn">
-              Shop The Gift <ArrowRight size={13} />
+            <span className="tag">Commercial Workplace 2026</span>
+            <h1>The Modern Office Suite</h1>
+            <p>
+              High-performance ergonomic task chairs, dual-motor sit-stand workstations, and precision monitors engineered for commercial durability.
+            </p>
+            <Link to="/category/furniture%20%26%20seating" className="btn">
+              Explore Workstations <ArrowRight size={13} />
             </Link>
           </HeroLeft>
 
           <HeroRight>
-            <img src="/images/holiday-trio.jpg" alt="The Holiday Shop Trio" />
+            <img src="/images/ergonomic-chair.jpg" alt="Ergohuman Executive Chair" />
           </HeroRight>
         </HeroContent>
       </HeroSection>
@@ -339,8 +296,8 @@ export default function HomePage() {
       {/* Best Sellers (5 Featured Top Rated - Acceptance Criteria) */}
       <SectionWrap>
         <SectionHeader>
-          <h2>Best Sellers</h2>
-          <Link to="/category/deodorant" className="view-all">Shop All (5)</Link>
+          <h2>Best Sellers (Featured 5 Top Rated)</h2>
+          <Link to="/category/furniture%20%26%20seating" className="view-all">Shop All Workstations</Link>
         </SectionHeader>
 
         <CarouselRow>
@@ -350,44 +307,34 @@ export default function HomePage() {
         </CarouselRow>
       </SectionWrap>
 
-      {/* Editorial Full-width Scent banner */}
-      <FullBanner>
-        <div className="inner">
-          <h3>Iconic Scents. Active Formulas.</h3>
-          <Link to="/category/body%20wash" className="pill">
-            Explore Formulas <ArrowRight size={12} />
-          </Link>
-        </div>
-      </FullBanner>
-
-      {/* Dual Featured Featurettes (Discovery Sets + Lily & Yuzu) */}
+      {/* Dual Featured Featurettes */}
       <SectionWrap style={{ paddingTop: 0 }}>
         <DualGrid>
-          <DualCard to="/category/sets%20%26%20gifts">
-            <img src="/images/discovery-set.jpg" alt="Discovery Sets" className="bg" />
+          <DualCard to="/product/2">
+            <img src="/images/standing-desk.jpg" alt="Motorised Standing Desk" className="bg" />
             <div className="overlay-content">
-              <h4>Explore Discovery Sets</h4>
-              <span className="btn-pill">Shop Now <ArrowRight size={11} /></span>
+              <h4>Dual-Motor Standing Desks</h4>
+              <span className="btn-pill">View Specs <ArrowRight size={11} /></span>
             </div>
           </DualCard>
 
-          <DualCard to="/product/5">
-            <img src="/images/perfume-lily.jpg" alt="Lily & Yuzu Perfume" className="bg" />
+          <DualCard to="/product/3">
+            <img src="/images/curved-monitor.jpg" alt="Curved Productivity Monitor" className="bg" />
             <div className="overlay-content">
-              <h4>Lily &amp; Yuzu Perfume</h4>
-              <span className="btn-pill">Shop Now <ArrowRight size={11} /></span>
+              <h4>Dell UltraSharp 34" Monitors</h4>
+              <span className="btn-pill">View Specs <ArrowRight size={11} /></span>
             </div>
           </DualCard>
         </DualGrid>
 
-        {/* Holiday Gifts Row */}
+        {/* Technology Highlights */}
         <SectionHeader>
-          <h2>Holiday Gifts</h2>
-          <Link to="/category/sets%20%26%20gifts" className="view-all">View All</Link>
+          <h2>Commercial Technology &amp; Devices</h2>
+          <Link to="/category/technology%20%26%20monitors" className="view-all">View All Tech</Link>
         </SectionHeader>
 
         <CarouselRow>
-          {holidayGifts.slice(0, 5).map((prod) => (
+          {technologyPicks.slice(0, 5).map((prod) => (
             <ProductCard key={prod.id} product={prod} />
           ))}
         </CarouselRow>
@@ -395,29 +342,29 @@ export default function HomePage() {
         {/* Shop By Category Visual Pill Section */}
         <SectionHeader style={{ marginTop: 48 }}>
           <h2>Shop by Category</h2>
-          <span style={{ fontSize: 11, letterSpacing: '0.08em', color: '#888' }}>6 Collections</span>
+          <span style={{ fontSize: 11, letterSpacing: '0.08em', color: '#888' }}>5 Workplace Collections</span>
         </SectionHeader>
 
         <CategoryPillsRow>
-          <CategoryTile to="/category/deodorant">
-            <img src="/images/deodorant-hero.jpg" alt="Deodorant" />
-            <span className="label">Deodorant</span>
+          <CategoryTile to="/category/furniture%20%26%20seating">
+            <img src="/images/ergonomic-chair.jpg" alt="Furniture" />
+            <span className="label">Furniture &amp; Seating</span>
           </CategoryTile>
-          <CategoryTile to="/category/body%20wash">
-            <img src="/images/body-wash.jpg" alt="Body Wash" />
-            <span className="label">Body Wash</span>
+          <CategoryTile to="/category/technology%20%26%20monitors">
+            <img src="/images/curved-monitor.jpg" alt="Monitors" />
+            <span className="label">Monitors &amp; Tech</span>
           </CategoryTile>
-          <CategoryTile to="/category/fragrance">
-            <img src="/images/perfume-lily.jpg" alt="Fragrance" />
-            <span className="label">Fragrance</span>
+          <CategoryTile to="/category/printers%20%26%20machines">
+            <img src="/images/laser-printer.jpg" alt="Printers" />
+            <span className="label">Printers &amp; Machines</span>
           </CategoryTile>
-          <CategoryTile to="/category/body%20mist">
-            <img src="/images/body-mist.jpg" alt="Body Mist" />
-            <span className="label">Body Mist</span>
+          <CategoryTile to="/category/storage%20%26%20organisation">
+            <img src="/images/filing-cabinet.jpg" alt="Storage" />
+            <span className="label">Storage Units</span>
           </CategoryTile>
-          <CategoryTile to="/category/body%20oil">
-            <img src="/images/body-oil.jpg" alt="Body Oil" />
-            <span className="label">Body Oil</span>
+          <CategoryTile to="/category/stationery%20%26%20supplies">
+            <img src="/images/stationery-set.jpg" alt="Stationery" />
+            <span className="label">Stationery &amp; Desk</span>
           </CategoryTile>
         </CategoryPillsRow>
       </SectionWrap>

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { Search, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { dummyCategories } from '../data/dummyProducts';
-import { tokens } from '../styles/theme';
 
 const Announcement = styled.div`
   background: #000000;
@@ -13,6 +12,7 @@ const Announcement = styled.div`
   font-size: 11px;
   letter-spacing: 0.08em;
   font-weight: 500;
+  text-transform: uppercase;
 `;
 
 const NavHeader = styled.header`
@@ -75,7 +75,7 @@ const SearchForm = styled.form`
   display: flex;
   align-items: center;
   position: relative;
-  width: 220px;
+  width: 240px;
 
   @media (max-width: 600px) {
     width: 130px;
@@ -152,28 +152,28 @@ export default function Navbar() {
 
   return (
     <>
-      <Announcement>Free Next Day US Delivery On Orders Over $50+</Announcement>
+      <Announcement>Free Commercial Metro Delivery On Workstation Orders Over $55</Announcement>
       <NavHeader>
         <NavRow>
           <LeftLinks>
-            <Link to="/category/deodorant">Shop All</Link>
-            <Link to="/category/sets%20%26%20gifts">Gift Sets</Link>
+            <Link to="/category/furniture%20%26%20seating">Workstations</Link>
+            <Link to="/category/technology%20%26%20monitors">Technology</Link>
             <Link to="/">Best Sellers</Link>
           </LeftLinks>
 
-          <Brand to="/">SALT &amp; STONE</Brand>
+          <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
 
           <RightSection>
             <SearchForm onSubmit={handleSearch}>
               <SearchIconWrap><Search size={13} /></SearchIconWrap>
               <SearchInput
                 type="text"
-                placeholder="Search..."
+                placeholder="Search products..."
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
               />
             </SearchForm>
-            <span style={{ fontSize: 11, letterSpacing: '0.08em', fontWeight: 600 }}>BAG (0)</span>
+            <span style={{ fontSize: 11, letterSpacing: '0.08em', fontWeight: 600 }}>ACCOUNT</span>
           </RightSection>
         </NavRow>
 

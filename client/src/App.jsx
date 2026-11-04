@@ -115,48 +115,48 @@ export default function App() {
           <Footer>
             <FooterGrid>
               <NewsletterCol>
-                <h4>Sign up for 15% Off</h4>
-                <p>Receive exclusive early access to limited edition holiday drops.</p>
+                <h4>Corporate Trade Updates</h4>
+                <p>Receive updates on volume workstation fitouts, ergonomic certifications, and stock releases.</p>
                 <div className="input-wrap">
-                  <input type="email" placeholder="Enter your email" />
+                  <input type="email" placeholder="Enter corporate email" />
                   <button>JOIN</button>
                 </div>
               </NewsletterCol>
 
               <LinkCol>
-                <h5>Explore</h5>
+                <h5>Workplace Categories</h5>
                 <ul>
-                  <li><Link to="/category/deodorant">Natural Deodorant</Link></li>
-                  <li><Link to="/category/body%20wash">Antioxidant Body Wash</Link></li>
-                  <li><Link to="/category/fragrance">Fine Fragrance</Link></li>
-                  <li><Link to="/category/sets%20%26%20gifts">Holiday Sets</Link></li>
+                  <li><Link to="/category/furniture%20%26%20seating">Ergonomic Task Chairs</Link></li>
+                  <li><Link to="/category/furniture%20%26%20seating">Motorised Standing Desks</Link></li>
+                  <li><Link to="/category/technology%20%26%20monitors">Curved USB-C Monitors</Link></li>
+                  <li><Link to="/category/printers%20%26%20machines">Laser Printers &amp; Scanners</Link></li>
                 </ul>
               </LinkCol>
 
               <LinkCol>
-                <h5>Customer Care</h5>
+                <h5>Customer Services</h5>
                 <ul>
-                  <li><a href="#shipping">Shipping &amp; Returns</a></li>
-                  <li><a href="#faq">FAQ &amp; Product Guides</a></li>
-                  <li><a href="#stockists">Global Stockists</a></li>
-                  <li><a href="#contact">Wholesale Enquiry</a></li>
+                  <li><a href="#quote">Request Corporate Quote</a></li>
+                  <li><a href="#delivery">Same-Day Metro Dispatch</a></li>
+                  <li><a href="#warranty">AFRDI Certification Guidelines</a></li>
+                  <li><a href="#returns">Commercial Returns &amp; Service</a></li>
                 </ul>
               </LinkCol>
 
               <LinkCol>
-                <h5>Sustainability</h5>
+                <h5>Account &amp; Legal</h5>
                 <ul>
-                  <li><a href="#ocean">Ocean Recycled Plastics</a></li>
-                  <li><a href="#renewable">Solar Powered Operations</a></li>
-                  <li><a href="#cruelty">Leaping Bunny Certified</a></li>
-                  <li><a href="#clinical">Clinical Lab Validations</a></li>
+                  <li><a href="#trade">30-Day B2B Trade Accounts</a></li>
+                  <li><a href="#compliance">Supply Chain Compliance</a></li>
+                  <li><a href="#sustainability">Circular Furniture Recycling</a></li>
+                  <li><a href="#terms">Terms &amp; Warranties</a></li>
                 </ul>
               </LinkCol>
             </FooterGrid>
 
             <BottomLegal>
-              <span>© {new Date().getFullYear()} SALT &amp; STONE. All rights reserved.</span>
-              <span>Privacy Policy · Terms · Accessibility</span>
+              <span>© {new Date().getFullYear()} Officeworks Workplace Catalogue MVP.</span>
+              <span>Commercial Terms · Warranty Information · Trade Inquiries</span>
             </BottomLegal>
           </Footer>
         </div>
