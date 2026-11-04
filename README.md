@@ -8,3 +8,4 @@ A modern, extensible product catalogue application built for rapid evolution fro
 - **Backend**: Node.js (JavaScript, Express), Layered Architecture (Controllers, Services, Repositories, Adapters)
 - **Database**: MongoDB Atlas (Mongoose ODM)
 - **External API**: Fake Store API (accessed exclusively via backend adapter)
+
