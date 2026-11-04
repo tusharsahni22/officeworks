@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft } from 'lucide-react';
 import { tokens } from '../styles/theme';
+import { api } from '../services/api';
 
 const PageWrap = styled.div`
   max-width: 1440px;
@@ -87,15 +88,28 @@ const Grid = styled.div`
 export default function CategoryPage() {
   const { categoryName } = useParams();
   const decoded = decodeURIComponent(categoryName || '');
+  const [data, setData] = useState({ topRated: [], additional: [] });
 
-  const matched = dummyProducts.filter(
-    (p) => p.category.toLowerCase() === decoded.toLowerCase()
-  );
-
-  const sorted = [...matched].sort((a, b) => b.rating.rate - a.rating.rate);
-  const topCount = Math.min(2, Math.ceil(matched.length / 2));
-  const topRated = sorted.slice(0, topCount);
-  const additional = sorted.slice(topCount);
+  useEffect(() => {
+    async function loadCategory() {
+      // Query backend category route
+      const res = await api.getCategoryProducts(decoded);
+      if (res && res.topRated) {
+        setData({ topRated: res.topRated, additional: res.additional || [] });
+      } else {
+        const matched = dummyProducts.filter(
+          (p) => p.category.toLowerCase() === decoded.toLowerCase()
+        );
+        const sorted = [...matched].sort((a, b) => b.rating.rate - a.rating.rate);
+        const topCount = Math.min(2, Math.ceil(matched.length / 2));
+        setData({
+          topRated: sorted.slice(0, topCount),
+          additional: sorted.slice(topCount)
+        });
+      }
+    }
+    loadCategory();
+  }, [decoded]);
 
   return (
     <PageWrap>
@@ -115,20 +129,20 @@ export default function CategoryPage() {
           <span className="meta">Verified User Evaluations</span>
         </SectionHeader>
         <Grid>
-          {topRated.map((prod) => (
+          {data.topRated.map((prod) => (
             <ProductCard key={prod.id} product={prod} />
           ))}
         </Grid>
       </section>
 
-      {additional.length > 0 && (
+      {data.additional.length > 0 && (
         <section>
           <SectionHeader>
             <h2>Additional Products in Collection</h2>
             <span className="meta">Complementary Essentials</span>
           </SectionHeader>
           <Grid>
-            {additional.map((prod) => (
+            {data.additional.map((prod) => (
               <ProductCard key={prod.id} product={prod} />
             ))}
           </Grid>

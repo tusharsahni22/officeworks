@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import EnquiryModal from '../components/EnquiryModal';
-import { ArrowLeft, ShieldCheck, Truck, Clock } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Truck } from 'lucide-react';
 import { tokens } from '../styles/theme';
+import { api } from '../services/api';
 
 const PageWrap = styled.div`
   max-width: 1440px;
@@ -55,7 +56,7 @@ const ImageStage = styled.div`
   img {
     max-width: 100%;
     max-height: 440px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: ${tokens.radii.radiusSm};
   }
 `;
@@ -181,8 +182,32 @@ const TrustGrid = styled.div`
 export default function ProductDetailPage() {
   const { id } = useParams();
   const [modalOpen, setModalOpen] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const product = dummyProducts.find((p) => p.id === parseInt(id, 10));
+  useEffect(() => {
+    async function loadProduct() {
+      setLoading(true);
+      // Fetch product via backend API
+      const res = await api.getProductById(id);
+      if (res) {
+        setProduct(res);
+      } else {
+        const local = dummyProducts.find((p) => p.id === parseInt(id, 10));
+        setProduct(local);
+      }
+      setLoading(false);
+    }
+    loadProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <PageWrap>
+        <p style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: '0.1em' }}>Loading product details...</p>
+      </PageWrap>
+    );
+  }
 
   if (!product) {
     return (

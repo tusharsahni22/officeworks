@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { X, CheckCircle, Send, Loader2 } from 'lucide-react';
 import { tokens } from '../styles/theme';
+import { api } from '../services/api';
 
 const Overlay = styled.div`
   position: fixed;
@@ -225,14 +226,27 @@ export default function EnquiryModal({ product, onClose }) {
     return Object.keys(err).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+
+    try {
+      // Connects directly to backend API (or fallback)
+      await api.submitEnquiry({
+        productId: product.id,
+        productTitle: product.title,
+        customerName: formData.name.trim(),
+        customerEmail: formData.email.trim(),
+        company: formData.company.trim(),
+        message: formData.message.trim()
+      });
       setSubmitted(true);
-    }, 600);
+    } catch (err) {
+      setErrors({ form: err.message || 'Error transmitting enquiry. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -264,6 +278,8 @@ export default function EnquiryModal({ product, onClose }) {
                   <span className="price">${product.price.toFixed(2)}</span>
                 </div>
               </Summary>
+
+              {errors.form && <ErrorMsg style={{ marginBottom: 12 }}>{errors.form}</ErrorMsg>}
 
               <FormGroup>
                 <Label>Your Name *</Label>
@@ -307,7 +323,6 @@ export default function EnquiryModal({ product, onClose }) {
                 />
               </FormGroup>
 
-              {/* Single clear path to action - never stacked */}
               <SubmitBtn type="submit" disabled={loading}>
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 {loading ? 'Transmitting to Sales...' : 'Submit Enquiry to Sales'}

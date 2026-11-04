@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
 import { tokens } from '../styles/theme';
 import { ArrowRight, ShieldCheck, Truck, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { api } from '../services/api';
 
 const PageWrap = styled.div`
   width: 100%;
@@ -126,7 +127,7 @@ const SpotlightCard = styled.div`
     img {
       max-width: 100%;
       max-height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: ${tokens.radii.radiusSm};
     }
   }
@@ -228,13 +229,39 @@ const TrustCard = styled.div`
 `;
 
 export default function HomePage() {
-  // Acceptance criteria: GIVEN I have chosen 5 products to be "top rated", I see those 5 featured products
-  const topRated = [...dummyProducts]
-    .sort((a, b) => b.rating.rate - a.rating.rate)
-    .slice(0, 5);
+  const [featured, setFeatured] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const remainder = dummyProducts.filter((p) => !topRated.some((t) => t.id === p.id));
-  const spotlight = topRated[0];
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      // Fetch 5 Top Rated from Backend API
+      const featData = await api.getFeaturedProducts();
+      const allData = await api.getProducts();
+
+      if (featData && featData.length > 0) {
+        setFeatured(featData);
+      } else {
+        const fallbackTop = [...dummyProducts]
+          .sort((a, b) => b.rating.rate - a.rating.rate)
+          .slice(0, 5);
+        setFeatured(fallbackTop);
+      }
+
+      if (allData && allData.length > 0) {
+        setAllProducts(allData);
+      } else {
+        setAllProducts(dummyProducts);
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  const topRated = featured.length > 0 ? featured : dummyProducts.slice(0, 5);
+  const remainder = allProducts.filter((p) => !topRated.some((t) => t.id === p.id));
+  const spotlight = topRated[0] || dummyProducts[0];
 
   return (
     <PageWrap>
@@ -268,7 +295,7 @@ export default function HomePage() {
             <img src={spotlight.image} alt={spotlight.title} />
           </div>
           <h3>{spotlight.title}</h3>
-          <span className="price">${spotlight.price.toFixed(2)}</span>
+          <span className="price">${spotlight.price?.toFixed(2)}</span>
           <Link to={`/product/${spotlight.id}`} className="cta">
             View &amp; Enquire <ArrowRight size={12} />
           </Link>

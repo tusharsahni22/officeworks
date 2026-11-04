@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft, Search } from 'lucide-react';
 import { tokens } from '../styles/theme';
+import { api } from '../services/api';
 
 const PageWrap = styled.div`
   max-width: 1440px;
@@ -72,13 +73,34 @@ const NoResult = styled.div`
 export default function SearchPage() {
   const [params] = useSearchParams();
   const query = (params.get('q') || '').trim();
+  const [matched, setMatched] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const matched = query
-    ? dummyProducts.filter((p) => {
-        const text = `${p.title} ${p.description} ${p.category}`.toLowerCase();
-        return text.includes(query.toLowerCase());
-      })
-    : [];
+  useEffect(() => {
+    async function performSearch() {
+      if (!query) {
+        setMatched([]);
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+
+      // Search via backend endpoint
+      const results = await api.getProducts({ search: query });
+      if (results) {
+        setMatched(results);
+      } else {
+        // Fallback filter
+        const local = dummyProducts.filter((p) => {
+          const text = `${p.title} ${p.description} ${p.category}`.toLowerCase();
+          return text.includes(query.toLowerCase());
+        });
+        setMatched(local);
+      }
+      setLoading(false);
+    }
+    performSearch();
+  }, [query]);
 
   return (
     <PageWrap>
