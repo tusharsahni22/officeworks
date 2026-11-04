@@ -2,39 +2,52 @@ import { createGlobalStyle } from 'styled-components';
 
 export const tokens = {
   colors: {
-    color6: '#F5F5F5',      // Background: Clean mineral neutral
-    color1: '#000000',      // Text Primary: Pitch black
-    color3: '#989898',      // Text Secondary: Muted stone grey
-    color2: '#BC1B20',      // Accent: Destructive / Warning red
-    color5: '#E3E3E3',      // Border: Clean hairline stroke
-    color4: '#879DAF',      // Background Dark / Oceanic slate
-    color7: '#FFFFFF',      // Text Light / Pure white
+    bg: '#FFFFFF',
+    canvasMuted: '#F8F8F8',
     surface: '#FFFFFF',
-    overlay: 'rgba(0, 0, 0, 0.6)'
+    textPrimary: '#000000',
+    textSecondary: '#666666',
+    border: '#EEEEEE',
+    borderLight: '#F0F0F0',
+    accentRed: '#BC1B20',
+    heroBg: '#0b1928',
+    pillBg: 'rgba(255, 255, 255, 0.9)',
+    pillText: '#000000',
+    overlay: 'rgba(0, 0, 0, 0.6)',
+    color1: '#000000',
+    color2: '#BC1B20',
+    color3: '#777777',
+    color4: '#879DAF',
+    color5: '#EEEEEE',
+    color6: '#F8F8F8',
+    color7: '#FFFFFF'
   },
   typography: {
     fontFamilies: {
-      oracle: "'Helvetica Neue', 'Helvetica', -apple-system, BlinkMacSystemFont, sans-serif",
-      serif: "'Times New Roman', Times, serif"
+      sans: "'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif",
+      oracle: "'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif"
     },
     sizes: {
+      xs: '10px',
+      sm: '12px',
+      base: '13px',
+      md: '15px',
+      lg: '18px',
+      xl: '24px',
+      hero: '38px',
       textXs: '11px',
       textSm: '12px',
-      textBase: '14px',
+      textBase: '13px',
       textLg: '16px',
       textXl: '18px',
       text2xl: '22px',
       text3xl: '26px',
-      text4xl: '32px',
-      textHero: '48px'
-    },
-    weights: {
-      regular: 400
+      text4xl: '32px'
     },
     lineHeights: {
-      tight: '1.15',
-      normal: '1.45',
-      relaxed: '1.6'
+      tight: 1.15,
+      normal: 1.45,
+      relaxed: 1.6
     }
   },
   spacing: {
@@ -66,19 +79,15 @@ export const tokens = {
     space26: '295px'
   },
   radii: {
+    pill: '9999px',
+    card: '8px',
     radiusSm: '2px',
-    radiusMd: '7.5px',
-    radiusLg: '8px',
-    radiusXl: '12px',
-    radius16: '16px',
-    radius6: '24px',
-    radius7: '28px',
-    radiusFull: '9999px'
+    radiusMd: '8px',
+    radiusLg: '12px'
   },
   motion: {
-    durationFast: '0.15s ease-out',
-    durationBase: 'color 0.2s linear, opacity 0.2s linear, transform 0.2s linear',
-    durationSlow: '0.5s ease-in-out both'
+    durationBase: '0.2s ease',
+    durationFast: '0.15s ease'
   }
 };
 
@@ -92,32 +101,10 @@ export const GlobalStyle = createGlobalStyle`
   html, body {
     width: 100%;
     min-height: 100%;
-  }
-
-  body {
-    background-color: ${tokens.colors.color6};
-    color: ${tokens.colors.color1};
-    font-family: ${tokens.typography.fontFamilies.oracle};
-    font-weight: ${tokens.typography.weights.regular};
-    font-size: ${tokens.typography.sizes.textBase};
-    line-height: ${tokens.typography.lineHeights.normal};
+    background-color: ${tokens.colors.bg};
+    color: ${tokens.colors.textPrimary};
+    font-family: ${tokens.typography.fontFamilies.sans};
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.01em;
-  }
-
-  #root {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  h1, h2, h3, h4, h5 {
-    font-family: ${tokens.typography.fontFamilies.oracle};
-    font-weight: ${tokens.typography.weights.regular};
-    letter-spacing: -0.03em;
-    color: ${tokens.colors.color1};
-    text-transform: uppercase;
   }
 
   a {
@@ -127,15 +114,5 @@ export const GlobalStyle = createGlobalStyle`
 
   button, input, textarea {
     font-family: inherit;
-  }
-
-  img {
-    display: block;
-    max-width: 100%;
-  }
-
-  :focus-visible {
-    outline: 1px solid ${tokens.colors.color1};
-    outline-offset: 2px;
   }
 `;

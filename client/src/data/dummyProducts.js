@@ -6,7 +6,9 @@ export const dummyProducts = [
     description: "Commercial-grade high-back ergonomic task chair with dynamic lumbar support, 4D adjustable armrests, pneumatic height adjustment, and breathable elastomeric mesh.",
     category: "furniture & seating",
     image: "/images/ergonomic-chair.jpg",
-    rating: { rate: 4.9, count: 520 }
+    rating: { rate: 4.9, count: 520 },
+    subtitle: "AFRDI Level 6 · 4D Armrests",
+    badge: "BESTSELLER"
   },
   {
     id: 2,
@@ -15,7 +17,9 @@ export const dummyProducts = [
     description: "Heavy-duty steel frame dual-motor height adjustable sit-stand desk with 4 programmable memory presets, anti-collision sensor, and cable management tray.",
     category: "furniture & seating",
     image: "/images/standing-desk.jpg",
-    rating: { rate: 4.8, count: 430 }
+    rating: { rate: 4.8, count: 430 },
+    subtitle: "Dual-Motor · 4 Memory Presets",
+    badge: "TOP RATED"
   },
   {
     id: 3,
@@ -24,7 +28,9 @@ export const dummyProducts = [
     description: "Immersive 34-inch curved productivity monitor with 90W Power Delivery USB-C, built-in RJ45 Ethernet, ComfortView Plus low blue light, and 99% sRGB color accuracy.",
     category: "technology & monitors",
     image: "/images/curved-monitor.jpg",
-    rating: { rate: 4.9, count: 380 }
+    rating: { rate: 4.9, count: 380 },
+    subtitle: "34\" WQHD · 90W USB-C Hub",
+    badge: "COMMERCIAL PICK"
   },
   {
     id: 4,
@@ -33,7 +39,9 @@ export const dummyProducts = [
     description: "Low-profile tactile quiet mechanical switches, smart illumination, dual Bluetooth and Logi Bolt connectivity with multi-device cross-computer flow.",
     category: "technology & monitors",
     image: "/images/mechanical-keyboard.jpg",
-    rating: { rate: 4.8, count: 670 }
+    rating: { rate: 4.8, count: 670 },
+    subtitle: "Tactile Quiet · Multi-Device",
+    badge: "PRO SERIES"
   },
   {
     id: 5,
@@ -42,7 +50,9 @@ export const dummyProducts = [
     description: "8K DPI any-surface optical sensor, MagSpeed electromagnetic scroll wheel, quiet click mechanism, and thumb scroll wheel for seamless spreadsheets and CAD.",
     category: "technology & monitors",
     image: "/images/wireless-mouse.jpg",
-    rating: { rate: 4.9, count: 890 }
+    rating: { rate: 4.9, count: 890 },
+    subtitle: "8K DPI · MagSpeed Scroll",
+    badge: "CUSTOMER FAVORITE"
   },
   {
     id: 6,
@@ -51,7 +61,8 @@ export const dummyProducts = [
     description: "High-speed automatic duplex printing, 50-sheet dual-scan ADF, high-yield toner cartridges, and Gigabit Ethernet / Wi-Fi direct network connectivity.",
     category: "printers & machines",
     image: "/images/laser-printer.jpg",
-    rating: { rate: 4.7, count: 310 }
+    rating: { rate: 4.7, count: 310 },
+    subtitle: "Duplex Laser · Gigabit Wi-Fi"
   },
   {
     id: 7,
@@ -60,7 +71,8 @@ export const dummyProducts = [
     description: "Industry-leading acoustic noise cancellation with Aware Mode, lightweight synthetic leather cushions, crystal-clear voice pickup for Zoom and Microsoft Teams.",
     category: "technology & monitors",
     image: "/images/noise-cancelling-headphones.jpg",
-    rating: { rate: 4.8, count: 460 }
+    rating: { rate: 4.8, count: 460 },
+    subtitle: "Acoustic ANC · Clear Mic"
   },
   {
     id: 8,
@@ -69,7 +81,8 @@ export const dummyProducts = [
     description: "Curved optical head illuminates entire workstation (90cm range), ambient light sensor with auto-dimming mode and adjustable colour temperatures from 2700K to 5700K.",
     category: "office lighting & decor",
     image: "/images/desk-lamp.jpg",
-    rating: { rate: 4.6, count: 210 }
+    rating: { rate: 4.6, count: 210 },
+    subtitle: "90cm Wide Arc · Auto-Dimming"
   },
   {
     id: 9,
@@ -78,7 +91,8 @@ export const dummyProducts = [
     description: "100% Jam Proof system with SafeSense technology, shreds 12 sheets per pass into 4x38mm particles (DIN P-4 security), staples, paper clips, and credit cards.",
     category: "printers & machines",
     image: "/images/shredder-machine.jpg",
-    rating: { rate: 4.5, count: 185 }
+    rating: { rate: 4.5, count: 185 },
+    subtitle: "100% Jam Proof · DIN P-4"
   },
   {
     id: 10,
@@ -87,7 +101,8 @@ export const dummyProducts = [
     description: "Heavy-gauge powder coated steel pedestal with anti-tilt fifth wheel, master central lock system, and full extension runners for foolscap & A4 suspension files.",
     category: "storage & organisation",
     image: "/images/filing-cabinet.jpg",
-    rating: { rate: 4.6, count: 290 }
+    rating: { rate: 4.6, count: 290 },
+    subtitle: "Steel Pedestal · Master Lock"
   },
   {
     id: 11,
@@ -96,7 +111,8 @@ export const dummyProducts = [
     description: "FSC-certified 100gsm acid-free ivory pages, structured project layout with meeting notes section, expandable inner pocket, and double ribbon bookmark.",
     category: "stationery & supplies",
     image: "/images/executive-notebook.jpg",
-    rating: { rate: 4.7, count: 740 }
+    rating: { rate: 4.7, count: 740 },
+    subtitle: "FSC Certified · 100gsm Acid-Free"
   },
   {
     id: 12,
@@ -105,7 +121,8 @@ export const dummyProducts = [
     description: "Weighted matte anodised aluminium desk tray, magnetic paperclip dispenser, heavy-duty stapler, tape dispenser, and brass fountain pen set.",
     category: "stationery & supplies",
     image: "/images/stationery-set.jpg",
-    rating: { rate: 4.6, count: 320 }
+    rating: { rate: 4.6, count: 320 },
+    subtitle: "Anodised Aluminium Desk Set"
   }
 ];
 

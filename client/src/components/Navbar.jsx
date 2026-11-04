@@ -3,122 +3,112 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Search } from 'lucide-react';
 import { dummyCategories } from '../data/dummyProducts';
-import { tokens } from '../styles/theme';
 
-const Header = styled.header`
-  background-color: ${tokens.colors.surface};
-  border-bottom: 1px solid ${tokens.colors.color5};
+const Announcement = styled.div`
+  background: #000000;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  text-transform: uppercase;
+`;
+
+const NavHeader = styled.header`
+  background: #FFFFFF;
+  border-bottom: 1px solid #EEEEEE;
   position: sticky;
   top: 0;
   z-index: 50;
 `;
 
-const AnnouncementBar = styled.div`
-  background-color: ${tokens.colors.color1};
-  color: ${tokens.colors.color7};
-  font-size: 11px;
-  text-align: center;
-  padding: 8px 16px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`;
-
-const NavMain = styled.div`
+const NavRow = styled.div`
   max-width: 1440px;
   margin: 0 auto;
   padding: 16px 32px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
 
   @media (max-width: 860px) {
-    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
     padding: 14px 16px;
   }
 `;
 
-const Brand = styled(Link)`
-  font-family: ${tokens.typography.fontFamilies.oracle};
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+const LeftLinks = styled.div`
+  display: flex;
+  gap: 20px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${tokens.colors.color1};
-  white-space: nowrap;
+  font-weight: 500;
+
+  @media (max-width: 860px) {
+    display: none;
+  }
+
+  a:hover {
+    opacity: 0.6;
+  }
+`;
+
+const Brand = styled(Link)`
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000000;
+  text-align: center;
+`;
+
+const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
 `;
 
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
   position: relative;
-  flex: 1;
-  max-width: 440px;
+  width: 240px;
 
-  @media (max-width: 860px) {
-    order: 3;
-    max-width: 100%;
-    width: 100%;
+  @media (max-width: 600px) {
+    width: 130px;
   }
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 10px 85px 10px 38px;
-  background-color: ${tokens.colors.color6};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: 2px;
-  font-size: 13px;
-  color: ${tokens.colors.color1};
+  padding: 6px 10px 6px 28px;
+  border: 1px solid #E0E0E0;
+  border-radius: 9999px;
+  font-size: 11px;
   outline: none;
-  transition: all 0.2s ease;
+  background: #FBFBFB;
 
   &:focus {
-    border-color: ${tokens.colors.color1};
-    background-color: ${tokens.colors.surface};
-  }
-
-  &::placeholder {
-    color: ${tokens.colors.color3};
-    text-transform: uppercase;
-    font-size: 11px;
-    letter-spacing: 0.05em;
+    border-color: #000000;
+    background: #FFFFFF;
   }
 `;
 
 const SearchIconWrap = styled.div`
   position: absolute;
-  left: 12px;
-  color: ${tokens.colors.color3};
+  left: 9px;
+  color: #888888;
   display: flex;
   align-items: center;
   pointer-events: none;
 `;
 
-const SearchSubmit = styled.button`
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  bottom: 4px;
-  background-color: ${tokens.colors.color1};
-  color: ${tokens.colors.color7};
-  border: none;
-  border-radius: 2px;
-  padding: 0 16px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #333333;
-  }
-`;
-
 const CategoryBar = styled.nav`
-  border-top: 1px solid ${tokens.colors.color5};
-  background-color: ${tokens.colors.surface};
+  background: #FFFFFF;
+  border-top: 1px solid #F5F5F5;
 `;
 
 const CategoryInner = styled.div`
@@ -127,79 +117,81 @@ const CategoryInner = styled.div`
   padding: 0 32px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   overflow-x: auto;
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 `;
 
-const CategoryLink = styled(Link)`
-  padding: 14px 0;
-  font-size: 12px;
-  letter-spacing: 0.08em;
+const CatLink = styled(Link)`
+  padding: 10px 0;
+  font-size: 11px;
+  font-weight: 500;
   text-transform: uppercase;
-  color: ${({ $active }) => ($active ? tokens.colors.color1 : tokens.colors.color3)};
-  border-bottom: 2px solid ${({ $active }) => ($active ? tokens.colors.color1 : 'transparent')};
+  letter-spacing: 0.08em;
+  color: ${({ $active }) => ($active ? '#000000' : '#888888')};
+  border-bottom: 2px solid ${({ $active }) => ($active ? '#000000' : 'transparent')};
   white-space: nowrap;
-  transition: all 0.2s ease;
 
   &:hover {
-    color: ${tokens.colors.color1};
+    color: #000000;
   }
 `;
 
 export default function Navbar() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [term, setTerm] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    if (term.trim()) {
+      navigate(`/search?q=${encodeURIComponent(term.trim())}`);
     }
   };
 
   return (
-    <Header>
-      <AnnouncementBar>
-        Complimentary Delivery On Commercial Workstation Orders · Trust Signals First
-      </AnnouncementBar>
+    <>
+      <Announcement>Free Commercial Metro Delivery On Workstation Orders Over $55</Announcement>
+      <NavHeader>
+        <NavRow>
+          <LeftLinks>
+            <Link to="/category/furniture%20%26%20seating">Workstations</Link>
+            <Link to="/category/technology%20%26%20monitors">Technology</Link>
+            <Link to="/">Best Sellers</Link>
+          </LeftLinks>
 
-      <NavMain>
-        <Brand to="/">
-          SALT &amp; STONE // WORKPLACE
-        </Brand>
+          <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
 
-        <SearchForm onSubmit={handleSearch}>
-          <SearchIconWrap>
-            <Search size={14} />
-          </SearchIconWrap>
-          <SearchInput
-            type="text"
-            placeholder="Search chairs, desks, monitors..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <SearchSubmit type="submit">Search</SearchSubmit>
-        </SearchForm>
-      </NavMain>
+          <RightSection>
+            <SearchForm onSubmit={handleSearch}>
+              <SearchIconWrap><Search size={13} /></SearchIconWrap>
+              <SearchInput
+                type="text"
+                placeholder="Search products..."
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+              />
+            </SearchForm>
+            <span style={{ fontSize: 11, letterSpacing: '0.08em', fontWeight: 600 }}>ACCOUNT</span>
+          </RightSection>
+        </NavRow>
 
-      <CategoryBar>
-        <CategoryInner>
-          <CategoryLink to="/" $active={location.pathname === '/'}>
-            All Products
-          </CategoryLink>
-          {dummyCategories.map((cat) => {
-            const active = location.pathname === `/category/${encodeURIComponent(cat)}`;
-            return (
-              <CategoryLink key={cat} to={`/category/${encodeURIComponent(cat)}`} $active={active}>
-                {cat}
-              </CategoryLink>
-            );
-          })}
-        </CategoryInner>
-      </CategoryBar>
-    </Header>
+        <CategoryBar>
+          <CategoryInner>
+            <CatLink to="/" $active={location.pathname === '/'}>All Products</CatLink>
+            {dummyCategories.map((c) => (
+              <CatLink
+                key={c}
+                to={`/category/${encodeURIComponent(c)}`}
+                $active={location.pathname === `/category/${encodeURIComponent(c)}`}
+              >
+                {c}
+              </CatLink>
+            ))}
+          </CategoryInner>
+        </CategoryBar>
+      </NavHeader>
+    </>
   );
 }

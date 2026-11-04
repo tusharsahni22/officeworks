@@ -4,69 +4,83 @@ import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft, Search } from 'lucide-react';
-import { tokens } from '../styles/theme';
 import { api } from '../services/api';
 
 const PageWrap = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  padding: ${tokens.spacing.space20} ${tokens.spacing.space20} ${tokens.spacing.space24};
+  padding: 32px 32px 64px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 48px;
+  }
 `;
 
 const BackNav = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: ${tokens.spacing.space5};
-  font-size: ${tokens.typography.sizes.textXs};
+  gap: 6px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: ${tokens.colors.color3};
-  margin-bottom: ${tokens.spacing.space17};
+  color: #777777;
+  margin-bottom: 24px;
+  font-weight: 500;
 
   &:hover {
-    color: ${tokens.colors.color1};
+    color: #000000;
   }
 `;
 
 const SearchHeader = styled.div`
-  border-bottom: 1px solid ${tokens.colors.color1};
-  padding-bottom: ${tokens.spacing.space14};
-  margin-bottom: ${tokens.spacing.space20};
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 16px;
+  margin-bottom: 28px;
 
   h1 {
-    font-size: ${tokens.typography.sizes.text3xl};
-    letter-spacing: 0.04em;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   p {
-    color: ${tokens.colors.color3};
-    font-size: ${tokens.typography.sizes.textSm};
-    margin-top: ${tokens.spacing.space3};
+    color: #777777;
+    font-size: 12px;
+    margin-top: 4px;
   }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: ${tokens.spacing.space17};
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 `;
 
 const NoResult = styled.div`
-  background: ${tokens.colors.surface};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space23} ${tokens.spacing.space20};
+  background: #F8F8F8;
+  border-radius: 8px;
+  padding: 48px 24px;
   text-align: center;
 
   h3 {
-    font-size: ${tokens.typography.sizes.textXl};
+    font-size: 16px;
     letter-spacing: 0.04em;
-    margin: ${tokens.spacing.space14} 0 ${tokens.spacing.space7};
+    text-transform: uppercase;
+    margin: 16px 0 6px;
   }
 
   p {
-    font-size: ${tokens.typography.sizes.textSm};
-    color: ${tokens.colors.color3};
+    font-size: 12px;
+    color: #777777;
   }
 `;
 
@@ -85,12 +99,10 @@ export default function SearchPage() {
       }
       setLoading(true);
 
-      // Search via backend endpoint
       const results = await api.getProducts({ search: query });
-      if (results) {
+      if (results && results.length > 0) {
         setMatched(results);
       } else {
-        // Fallback filter
         const local = dummyProducts.filter((p) => {
           const text = `${p.title} ${p.description} ${p.category}`.toLowerCase();
           return text.includes(query.toLowerCase());
@@ -104,12 +116,12 @@ export default function SearchPage() {
 
   return (
     <PageWrap>
-      <BackNav to="/"><ArrowLeft size={14} /> Return to Catalogue Overview</BackNav>
+      <BackNav to="/"><ArrowLeft size={13} /> Return to Shop</BackNav>
 
       <SearchHeader>
         <h1>Search Results</h1>
         <p>
-          Found {matched.length} result(s) matching keyword: <strong>"{query}"</strong>
+          Found {matched.length} result(s) for <strong>"{query}"</strong>
         </p>
       </SearchHeader>
 
@@ -121,9 +133,9 @@ export default function SearchPage() {
         </Grid>
       ) : (
         <NoResult>
-          <Search size={36} color="#000000" style={{ margin: '0 auto' }} />
-          <h3>No matching products found</h3>
-          <p>Please check your spelling or browse our workstation categories.</p>
+          <Search size={32} color="#000000" style={{ margin: '0 auto' }} />
+          <h3>No products found</h3>
+          <p>Please check your spelling or explore our fragrance and body care collections.</p>
         </NoResult>
       )}
     </PageWrap>
