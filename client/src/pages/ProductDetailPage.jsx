@@ -3,61 +3,60 @@ import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import EnquiryModal from '../components/EnquiryModal';
-import { ArrowLeft, ShieldCheck, Truck } from 'lucide-react';
-import { tokens } from '../styles/theme';
+import { ArrowLeft, Star, Shield, Sparkles, Heart } from 'lucide-react';
 import { api } from '../services/api';
 
 const PageWrap = styled.div`
-  max-width: 1440px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: ${tokens.spacing.space20} ${tokens.spacing.space20} ${tokens.spacing.space24};
+  padding: 32px 32px 64px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 48px;
+  }
 `;
 
 const BackNav = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: ${tokens.spacing.space5};
-  font-size: ${tokens.typography.sizes.textXs};
+  gap: 6px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: ${tokens.colors.color3};
-  margin-bottom: ${tokens.spacing.space17};
+  color: #777777;
+  margin-bottom: 24px;
+  font-weight: 500;
 
   &:hover {
-    color: ${tokens.colors.color1};
+    color: #000000;
   }
 `;
 
 const DetailGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${tokens.spacing.space21};
-  background-color: ${tokens.colors.surface};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space21};
+  gap: 48px;
+  align-items: start;
 
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
     grid-template-columns: 1fr;
-    padding: ${tokens.spacing.space14};
+    gap: 32px;
   }
 `;
 
 const ImageStage = styled.div`
-  background-color: ${tokens.colors.color6};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
+  background-color: #F8F8F8;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${tokens.spacing.space21};
-  min-height: 480px;
+  padding: 48px;
+  aspect-ratio: 1 / 1.1;
 
   img {
-    max-width: 100%;
-    max-height: 440px;
+    max-width: 88%;
+    max-height: 88%;
     object-fit: contain;
-    border-radius: ${tokens.radii.radiusSm};
   }
 `;
 
@@ -67,114 +66,115 @@ const MetaPanel = styled.div`
 `;
 
 const CategoryLabel = styled.span`
-  color: ${tokens.colors.color3};
-  font-size: ${tokens.typography.sizes.textXs};
+  color: #777777;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  margin-bottom: ${tokens.spacing.space7};
+  margin-bottom: 6px;
 `;
 
 const Title = styled.h1`
-  font-size: ${tokens.typography.sizes.text3xl};
-  line-height: ${tokens.typography.lineHeights.tight};
-  color: ${tokens.colors.color1};
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #000000;
   letter-spacing: -0.01em;
-  margin-bottom: ${tokens.spacing.space14};
+  margin-bottom: 8px;
+`;
+
+const SubtitleText = styled.p`
+  font-size: 13px;
+  color: #666666;
+  margin-bottom: 16px;
 `;
 
 const RatingBar = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.space9};
-  margin-bottom: ${tokens.spacing.space17};
-  font-size: ${tokens.typography.sizes.textXs};
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 11px;
 
   span.badge {
-    background: ${tokens.colors.color1};
-    color: ${tokens.colors.color7};
-    padding: ${tokens.spacing.space3} ${tokens.spacing.space7};
-    border-radius: ${tokens.radii.radiusSm};
-    letter-spacing: 0.08em;
+    background: #000000;
+    color: #FFFFFF;
+    padding: 3px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
   }
 
   span.reviews {
-    color: ${tokens.colors.color3};
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: #777777;
   }
 `;
 
 const PriceDisplay = styled.div`
-  font-size: ${tokens.typography.sizes.text4xl};
-  letter-spacing: 0.03em;
-  color: ${tokens.colors.color1};
-  margin-bottom: ${tokens.spacing.space17};
-  border-bottom: 1px solid ${tokens.colors.color5};
-  padding-bottom: ${tokens.spacing.space14};
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #000000;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 16px;
 `;
 
 const DescriptionBlock = styled.div`
-  margin-bottom: ${tokens.spacing.space20};
+  margin-bottom: 28px;
 
   h3 {
-    font-size: ${tokens.typography.sizes.textBase};
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: ${tokens.spacing.space9};
+    margin-bottom: 8px;
   }
 
   p {
-    font-size: ${tokens.typography.sizes.textBase};
-    line-height: ${tokens.typography.lineHeights.relaxed};
+    font-size: 13px;
+    line-height: 1.6;
     color: #444444;
   }
 `;
 
 const EnquireCTA = styled.button`
-  background-color: ${tokens.colors.color1};
-  color: ${tokens.colors.color7};
+  background-color: #000000;
+  color: #FFFFFF;
   border: none;
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space15} ${tokens.spacing.space21};
-  font-size: ${tokens.typography.sizes.textSm};
+  border-radius: 9999px;
+  padding: 16px 32px;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${tokens.spacing.space7};
-  transition: ${tokens.motion.durationBase};
+  gap: 8px;
+  transition: opacity 0.2s;
 
   &:hover {
-    background-color: #262626;
+    opacity: 0.88;
   }
 `;
 
-const TrustGrid = styled.div`
-  margin-top: ${tokens.spacing.space21};
+const RitualPoints = styled.div`
+  margin-top: 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${tokens.spacing.space14};
+  gap: 16px;
+  border-top: 1px solid #EEEEEE;
+  padding-top: 24px;
 
-  div.trust-box {
-    border: 1px solid ${tokens.colors.color5};
-    background-color: ${tokens.colors.color6};
-    border-radius: ${tokens.radii.radiusSm};
-    padding: ${tokens.spacing.space11} ${tokens.spacing.space14};
-    font-size: ${tokens.typography.sizes.textXs};
-
+  div.point {
+    font-size: 11px;
+    color: #555555;
     strong {
-      display: flex;
-      align-items: center;
-      gap: ${tokens.spacing.space4};
-      color: ${tokens.colors.color1};
-      margin-bottom: ${tokens.spacing.space2};
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    span {
-      color: ${tokens.colors.color3};
+      display: block;
+      color: #000000;
+      margin-bottom: 2px;
+      font-size: 12px;
     }
   }
 `;
@@ -188,7 +188,6 @@ export default function ProductDetailPage() {
   useEffect(() => {
     async function loadProduct() {
       setLoading(true);
-      // Fetch product via backend API
       const res = await api.getProductById(id);
       if (res) {
         setProduct(res);
@@ -204,7 +203,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <PageWrap>
-        <p style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: '0.1em' }}>Loading product details...</p>
+        <p style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.1em' }}>Loading formulation...</p>
       </PageWrap>
     );
   }
@@ -212,7 +211,7 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <PageWrap>
-        <BackNav to="/"><ArrowLeft size={14} /> Return to Catalogue</BackNav>
+        <BackNav to="/"><ArrowLeft size={13} /> Return to Shop</BackNav>
         <h2>Product Item Not Found</h2>
       </PageWrap>
     );
@@ -220,7 +219,7 @@ export default function ProductDetailPage() {
 
   return (
     <PageWrap>
-      <BackNav to="/"><ArrowLeft size={14} /> Return to Catalogue Overview</BackNav>
+      <BackNav to="/"><ArrowLeft size={13} /> Return to Collection</BackNav>
 
       <DetailGrid>
         <ImageStage>
@@ -230,34 +229,34 @@ export default function ProductDetailPage() {
         <MetaPanel>
           <CategoryLabel>{product.category}</CategoryLabel>
           <Title>{product.title}</Title>
+          {product.subtitle && <SubtitleText>{product.subtitle}</SubtitleText>}
 
           <RatingBar>
             <span className="badge">★ {product.rating?.rate}</span>
-            <span className="reviews">Verified Commercial Reviews ({product.rating?.count})</span>
+            <span className="reviews">Verified Customer Evaluations ({product.rating?.count})</span>
           </RatingBar>
 
           <PriceDisplay>${product.price.toFixed(2)}</PriceDisplay>
 
           <DescriptionBlock>
-            <h3>Commercial Specifications</h3>
+            <h3>Formulation &amp; Ritual Notes</h3>
             <p>{product.description}</p>
           </DescriptionBlock>
 
-          {/* Principle: Clear path to action — one primary CTA per view, never stacked */}
           <EnquireCTA onClick={() => setModalOpen(true)}>
-            Enquire for Commercial Pricing
+            Enquire for Product Allocation &amp; Gifting
           </EnquireCTA>
 
-          <TrustGrid>
-            <div className="trust-box">
-              <strong><ShieldCheck size={14} /> Commercial Certified</strong>
-              <span>AFRDI Level 6 rated durability</span>
+          <RitualPoints>
+            <div className="point">
+              <strong>Active Botanical Extracts</strong>
+              Seaweed, hyaluronic acid, and spirulina.
             </div>
-            <div className="trust-box">
-              <strong><Truck size={14} /> Metro Pallet Freight</strong>
-              <span>Priority commercial dispatch</span>
+            <div className="point">
+              <strong>Clean Conscious Luxury</strong>
+              Cruelty-free, recyclable ocean plastics.
             </div>
-          </TrustGrid>
+          </RitualPoints>
         </MetaPanel>
       </DetailGrid>
 

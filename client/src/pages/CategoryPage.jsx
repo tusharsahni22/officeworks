@@ -4,75 +4,86 @@ import styled from 'styled-components';
 import { dummyProducts } from '../data/dummyProducts';
 import ProductCard from '../components/ProductCard';
 import { ArrowLeft } from 'lucide-react';
-import { tokens } from '../styles/theme';
 import { api } from '../services/api';
 
 const PageWrap = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  padding: ${tokens.spacing.space20} ${tokens.spacing.space20} ${tokens.spacing.space24};
+  padding: 32px 32px 64px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 48px;
+  }
 `;
 
 const BackNav = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: ${tokens.spacing.space5};
-  font-size: ${tokens.typography.sizes.textXs};
+  gap: 6px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: ${tokens.colors.color3};
-  margin-bottom: ${tokens.spacing.space17};
+  color: #777777;
+  margin-bottom: 24px;
+  font-weight: 500;
 
   &:hover {
-    color: ${tokens.colors.color1};
+    color: #000000;
   }
 `;
 
 const CategoryHero = styled.div`
-  background: ${tokens.colors.surface};
-  border: 1px solid ${tokens.colors.color5};
-  border-radius: ${tokens.radii.radiusSm};
-  padding: ${tokens.spacing.space21};
-  margin-bottom: ${tokens.spacing.space21};
+  background: #F8F8F8;
+  border-radius: 8px;
+  padding: 40px;
+  margin-bottom: 36px;
 
   span.pre {
-    color: ${tokens.colors.color3};
-    font-size: ${tokens.typography.sizes.textXs};
+    color: #888888;
+    font-size: 10px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
+    display: block;
+    margin-bottom: 8px;
   }
 
   h1 {
-    font-size: ${tokens.typography.sizes.text4xl};
+    font-size: 32px;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: -0.02em;
-    margin: ${tokens.spacing.space7} 0 ${tokens.spacing.space11};
+    margin-bottom: 8px;
+    color: #000000;
   }
 
   p {
-    color: ${tokens.colors.color3};
-    font-size: ${tokens.typography.sizes.textBase};
-    max-width: 620px;
+    color: #666666;
+    font-size: 13px;
+    max-width: 520px;
+    line-height: 1.5;
   }
 `;
 
 const SectionHeader = styled.div`
-  border-bottom: 1px solid ${tokens.colors.color1};
-  padding-bottom: ${tokens.spacing.space9};
-  margin-bottom: ${tokens.spacing.space17};
-  margin-top: ${tokens.spacing.space20};
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: baseline;
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  margin-top: 32px;
 
   h2 {
-    font-size: ${tokens.typography.sizes.text2xl};
+    font-size: 16px;
+    font-weight: 600;
     letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   span.meta {
-    font-size: ${tokens.typography.sizes.textXs};
-    color: ${tokens.colors.color3};
+    font-size: 11px;
+    color: #888888;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -80,9 +91,17 @@ const SectionHeader = styled.div`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: ${tokens.spacing.space17};
-  margin-bottom: ${tokens.spacing.space22};
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 `;
 
 export default function CategoryPage() {
@@ -92,9 +111,8 @@ export default function CategoryPage() {
 
   useEffect(() => {
     async function loadCategory() {
-      // Query backend category route
       const res = await api.getCategoryProducts(decoded);
-      if (res && res.topRated) {
+      if (res && res.topRated && res.topRated.length > 0) {
         setData({ topRated: res.topRated, additional: res.additional || [] });
       } else {
         const matched = dummyProducts.filter(
@@ -113,20 +131,20 @@ export default function CategoryPage() {
 
   return (
     <PageWrap>
-      <BackNav to="/"><ArrowLeft size={14} /> Return to All Categories</BackNav>
+      <BackNav to="/"><ArrowLeft size={13} /> Return to Shop</BackNav>
 
       <CategoryHero>
-        <span className="pre">Catalogue Classification</span>
+        <span className="pre">Collection</span>
         <h1>{decoded}</h1>
         <p>
-          Curated workstation items, ergonomic furniture, and precision office technology meeting commercial durability standards.
+          Formulated with active ocean botanicals, antioxidants, and restorative plant extracts for daily ritual.
         </p>
       </CategoryHero>
 
       <section>
         <SectionHeader>
           <h2>Top Rated in {decoded}</h2>
-          <span className="meta">Verified User Evaluations</span>
+          <span className="meta">Customer Favorites</span>
         </SectionHeader>
         <Grid>
           {data.topRated.map((prod) => (
@@ -138,8 +156,8 @@ export default function CategoryPage() {
       {data.additional.length > 0 && (
         <section>
           <SectionHeader>
-            <h2>Additional Products in Collection</h2>
-            <span className="meta">Complementary Essentials</span>
+            <h2>More in this Collection</h2>
+            <span className="meta">Complementary Formulations</span>
           </SectionHeader>
           <Grid>
             {data.additional.map((prod) => (

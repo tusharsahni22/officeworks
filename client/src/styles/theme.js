@@ -12,11 +12,20 @@ export const tokens = {
     accentRed: '#BC1B20',
     heroBg: '#0b1928',
     pillBg: 'rgba(255, 255, 255, 0.9)',
-    pillText: '#000000'
+    pillText: '#000000',
+    overlay: 'rgba(0, 0, 0, 0.6)',
+    color1: '#000000',
+    color2: '#BC1B20',
+    color3: '#777777',
+    color4: '#879DAF',
+    color5: '#EEEEEE',
+    color6: '#F8F8F8',
+    color7: '#FFFFFF'
   },
   typography: {
     fontFamilies: {
-      sans: "'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif"
+      sans: "'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif",
+      oracle: "'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif"
     },
     sizes: {
       xs: '10px',
@@ -25,12 +34,60 @@ export const tokens = {
       md: '15px',
       lg: '18px',
       xl: '24px',
-      hero: '38px'
+      hero: '38px',
+      textXs: '11px',
+      textSm: '12px',
+      textBase: '13px',
+      textLg: '16px',
+      textXl: '18px',
+      text2xl: '22px',
+      text3xl: '26px',
+      text4xl: '32px'
+    },
+    lineHeights: {
+      tight: 1.15,
+      normal: 1.45,
+      relaxed: 1.6
     }
+  },
+  spacing: {
+    space1: '2px',
+    space2: '3px',
+    space3: '4px',
+    space4: '5px',
+    space5: '6px',
+    space6: '7px',
+    space7: '8px',
+    space8: '9px',
+    space9: '10px',
+    space10: '11px',
+    space11: '12px',
+    space12: '13px',
+    space13: '14px',
+    space14: '16px',
+    space15: '20px',
+    space16: '22px',
+    space17: '24px',
+    space18: '26px',
+    space19: '27px',
+    space20: '32px',
+    space21: '40px',
+    space22: '50px',
+    space23: '55px',
+    space24: '80px',
+    space25: '154px',
+    space26: '295px'
   },
   radii: {
     pill: '9999px',
-    card: '8px'
+    card: '8px',
+    radiusSm: '2px',
+    radiusMd: '8px',
+    radiusLg: '12px'
+  },
+  motion: {
+    durationBase: '0.2s ease',
+    durationFast: '0.15s ease'
   }
 };
 
