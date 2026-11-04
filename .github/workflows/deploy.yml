@@ -49,18 +49,10 @@ jobs:
           echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> server/.env
           echo "SMTP_SECURE=${{ secrets.SMTP_SECURE || 'false' }}" >> server/.env
 
-      - name: Build and push Backend Docker image
+      - name: Build and push Combined Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./server
-          file: ./server/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
-          tags: tusharsahni22/officeworks-backend:${{ env.TAG }}
-
-      - name: Build and push Frontend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./client
-          file: ./client/Dockerfile
-          push: true
-          tags: tusharsahni22/officeworks-frontend:${{ env.TAG }}
+          tags: tusharsahni22/officeworks:${{ env.TAG }}
