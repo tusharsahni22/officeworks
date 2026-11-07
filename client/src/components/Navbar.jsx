@@ -199,11 +199,25 @@ const MobileDrawer = styled.div`
   }
 `;
 
-export default function Navbar() {
+export default function Navbar({ navData }) {
   const [term, setTerm] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const announcement = navData?.announcement || 'Free Commercial Metro Delivery On Workstation Orders Over $55';
+  const brand = navData?.brand || 'OFFICEWORKS // WORKPLACE';
+  const primaryLinks = navData?.primaryLinks || [
+    { label: 'Workstations', url: '/category/furniture%20%26%20seating' },
+    { label: 'Technology', url: '/category/technology%20%26%20monitors' },
+    { label: 'Deals & Offers', url: '/pages/deals' },
+    { label: 'Ergonomics Guide', url: '/pages/ergonomics' },
+    { label: 'Contact Us', url: '/pages/contact' }
+  ];
+  const categories = navData?.categories || dummyCategories.map(c => ({
+    label: c,
+    url: `/category/${encodeURIComponent(c)}`
+  }));
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -215,7 +229,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Announcement>Free Commercial Metro Delivery On Workstation Orders Over $55</Announcement>
+      <Announcement>{announcement}</Announcement>
       <NavHeader>
         <NavRow>
           <LeftNavGroup>
@@ -223,14 +237,12 @@ export default function Navbar() {
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </MobileMenuBtn>
 
-            <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
+            <Brand to="/">{brand}</Brand>
 
             <LeftLinks>
-              <Link to="/category/furniture%20%26%20seating">Workstations</Link>
-              <Link to="/category/technology%20%26%20monitors">Technology</Link>
-              <Link to="/pages/deals">Deals &amp; Offers</Link>
-              <Link to="/pages/ergonomics">Ergonomics Guide</Link>
-              <Link to="/pages/contact">Contact Us</Link>
+              {primaryLinks.map((lnk, idx) => (
+                <Link key={idx} to={lnk.url}>{lnk.label}</Link>
+              ))}
             </LeftLinks>
           </LeftNavGroup>
 
@@ -249,23 +261,21 @@ export default function Navbar() {
 
         <MobileDrawer $open={menuOpen}>
           <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/category/furniture%20%26%20seating" onClick={() => setMenuOpen(false)}>Workstations &amp; Seating</Link>
-          <Link to="/category/technology%20%26%20monitors" onClick={() => setMenuOpen(false)}>Technology &amp; Monitors</Link>
-          <Link to="/pages/deals" onClick={() => setMenuOpen(false)}>Clearance &amp; Deals</Link>
-          <Link to="/pages/ergonomics" onClick={() => setMenuOpen(false)}>Ergonomic Guide</Link>
-          <Link to="/pages/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+          {primaryLinks.map((lnk, idx) => (
+            <Link key={idx} to={lnk.url} onClick={() => setMenuOpen(false)}>{lnk.label}</Link>
+          ))}
         </MobileDrawer>
 
         <CategoryBar>
           <CategoryInner>
             <CatLink to="/" $active={location.pathname === '/'}>All Products</CatLink>
-            {dummyCategories.map((c) => (
+            {categories.filter(c => c.label !== 'All Products').map((c, idx) => (
               <CatLink
-                key={c}
-                to={`/category/${encodeURIComponent(c)}`}
-                $active={location.pathname === `/category/${encodeURIComponent(c)}`}
+                key={idx}
+                to={c.url}
+                $active={location.pathname === c.url}
               >
-                {c}
+                {c.label}
               </CatLink>
             ))}
           </CategoryInner>

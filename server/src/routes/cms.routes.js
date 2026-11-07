@@ -16,5 +16,18 @@ router.get('/pages/:slug', async (req, res, next) => {
   }
 });
 
+// GET /api/cms/navigation (Retrieves dynamic header & footer layout)
+router.get('/navigation', async (req, res, next) => {
+  try {
+    const nav = await contentfulAdapter.getNavigation();
+    res.json({
+      success: true,
+      data: nav
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
 
