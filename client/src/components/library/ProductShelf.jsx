@@ -45,11 +45,16 @@ const CarouselRow = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 900px) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
   @media (max-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 `;
 
