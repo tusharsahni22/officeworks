@@ -9,27 +9,36 @@ const Card = styled(Link)`
   position: relative;
   text-decoration: none;
   color: #000000;
-  transition: opacity 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #F0F0F0;
+  padding-bottom: 12px;
 
   &:hover {
-    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   }
 `;
 
 const ImageContainer = styled.div`
   width: 100%;
-  aspect-ratio: 1 / 1.1;
-  background-color: #F8F8F8;
+  height: 220px;
+  background-color: #FAFAFA;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   margin-bottom: 12px;
+  padding: 16px;
 
   img {
-    max-width: 82%;
-    max-height: 82%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     transition: transform 0.35s ease;
   }
@@ -96,13 +105,15 @@ export default function ProductCard({ product }) {
         {product.badge && <Badge>{product.badge}</Badge>}
         <img src={product.image} alt={product.title} loading="lazy" />
       </ImageContainer>
-      <Category>{product.category}</Category>
-      <Title title={product.title}>{product.title}</Title>
-      <Subtitle>{product.subtitle || product.description}</Subtitle>
-      <PriceRow>
-        <span>${product.price.toFixed(2)}</span>
-        <span style={{ color: '#888', fontSize: 11 }}>★ {product.rating?.rate}</span>
-      </PriceRow>
+      <div style={{ padding: '0 12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <Category>{product.category}</Category>
+        <Title title={product.title}>{product.title}</Title>
+        <Subtitle>{product.subtitle || product.description}</Subtitle>
+        <PriceRow>
+          <span style={{ fontWeight: 600 }}>${product.price.toFixed(2)}</span>
+          <span style={{ color: '#888', fontSize: 11 }}>★ {product.rating?.rate}</span>
+        </PriceRow>
+      </div>
     </Card>
   );
 }

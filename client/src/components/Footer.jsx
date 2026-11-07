@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 const FooterWrap = styled.footer`
   background-color: #FAFAFA;
   border-top: 1px solid #EEEEEE;
-  padding: 60px 32px 32px;
+  padding: 56px 32px 32px;
   margin-top: auto;
+  width: 100%;
 
   @media (max-width: 768px) {
     padding: 40px 16px 24px;
@@ -16,11 +17,13 @@ const FooterWrap = styled.footer`
 const FooterGrid = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  gap: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1080px) {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
   }
@@ -32,6 +35,9 @@ const FooterGrid = styled.div`
 `;
 
 const NewsletterCol = styled.div`
+  flex: 1.2;
+  max-width: 380px;
+
   h4 {
     font-size: 13px;
     font-weight: 600;
@@ -44,7 +50,6 @@ const NewsletterCol = styled.div`
     color: #666;
     margin-bottom: 16px;
     line-height: 1.5;
-    max-width: 380px;
   }
   div.input-wrap {
     display: flex;
@@ -71,6 +76,8 @@ const NewsletterCol = styled.div`
 `;
 
 const LinkCol = styled.div`
+  flex: 1;
+
   h5 {
     font-size: 11px;
     font-weight: 600;
