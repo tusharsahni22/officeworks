@@ -35,8 +35,102 @@ class ContentfulAdapter {
   }
 
   /**
-   * Default fallback SDUI layout for Contact Us page
+   * Default fallback layout for Header & Footer navigation
    */
+  getDefaultNavigation() {
+    return {
+      header: {
+        announcement: 'Free Commercial Metro Delivery On Workstation Orders Over $55',
+        brand: 'OFFICEWORKS // WORKPLACE',
+        primaryLinks: [
+          { label: 'Workstations', url: '/category/furniture%20%26%20seating' },
+          { label: 'Technology', url: '/category/technology%20%26%20monitors' },
+          { label: 'Deals & Offers', url: '/pages/deals' },
+          { label: 'Ergonomics Guide', url: '/pages/ergonomics' },
+          { label: 'Contact Us', url: '/pages/contact' }
+        ],
+        categories: [
+          { label: 'All Products', url: '/' },
+          { label: 'furniture & seating', url: '/category/furniture%20%26%20seating' },
+          { label: 'technology & monitors', url: '/category/technology%20%26%20monitors' },
+          { label: 'printers & machines', url: '/category/printers%20%26%20machines' },
+          { label: 'storage & organisation', url: '/category/storage%20%26%20organisation' },
+          { label: 'stationery & supplies', url: '/category/stationery%20%26%20supplies' }
+        ]
+      },
+      footer: {
+        newsletter: {
+          title: 'Corporate Trade Updates',
+          description: 'Receive updates on volume workstation fitouts, ergonomic certifications, and stock releases.'
+        },
+        columns: [
+          {
+            title: 'Workplace Categories',
+            links: [
+              { label: 'Ergonomic Task Chairs', url: '/category/furniture%20%26%20seating' },
+              { label: 'Motorised Standing Desks', url: '/category/furniture%20%26%20seating' },
+              { label: 'Curved USB-C Monitors', url: '/category/technology%20%26%20monitors' },
+              { label: 'Laser Printers & Scanners', url: '/category/printers%20%26%20machines' }
+            ]
+          },
+          {
+            title: 'Customer Services',
+            links: [
+              { label: 'Request Corporate Quote', url: '/pages/contact' },
+              { label: 'Commercial Deals & Clearance', url: '/pages/deals' },
+              { label: 'AFRDI Certification Guidelines', url: '/pages/ergonomics' },
+              { label: 'Commercial Returns & Service', url: '/pages/contact' }
+            ]
+          },
+          {
+            title: 'Account & Legal',
+            links: [
+              { label: '30-Day B2B Trade Accounts', url: '/pages/contact' },
+              { label: 'Supply Chain Compliance', url: '/pages/ergonomics' },
+              { label: 'Circular Furniture Recycling', url: '/pages/ergonomics' },
+              { label: 'Terms & Warranties', url: '/pages/contact' }
+            ]
+          }
+        ],
+        copyright: `© ${new Date().getFullYear()} Officeworks Workplace Catalogue MVP.`
+      }
+    };
+  }
+
+  /**
+   * Fetch Navigation (Header & Footer) from Contentful or default fallback
+   */
+  async getNavigation() {
+    if (!this.client) {
+      return this.getDefaultNavigation();
+    }
+
+    try {
+      const entries = await this.client.getEntries({
+        content_type: 'page',
+        'fields.slug': 'navigation',
+        include: 2
+      });
+
+      if (entries.items && entries.items.length > 0) {
+        const navEntry = entries.items[0];
+        const rawSections = navEntry.fields.sections || [];
+        const headerSec = rawSections.find(s => s.fields?.componentType === 'HeaderNavigation');
+        const footerSec = rawSections.find(s => s.fields?.componentType === 'FooterNavigation');
+
+        const defaultNav = this.getDefaultNavigation();
+
+        return {
+          header: headerSec?.fields?.props || defaultNav.header,
+          footer: footerSec?.fields?.props || defaultNav.footer
+        };
+      }
+    } catch (err) {
+      console.warn('[ContentfulAdapter] Failed to fetch navigation:', err.message);
+    }
+
+    return this.getDefaultNavigation();
+  }
   getDefaultContactSchema() {
     return {
       page: 'contact',
