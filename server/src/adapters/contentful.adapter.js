@@ -155,12 +155,28 @@ class ContentfulAdapter {
           title: pageEntry.fields.title || 'Page',
           sections
         };
+      } else {
+        // Page entry not found in Contentful for this slug
+        return {
+          page: slug,
+          title: slug,
+          sections: []
+        };
       }
     } catch (err) {
       console.warn(`[ContentfulAdapter] Failed to fetch slug '${slug}':`, err.message);
     }
 
-    return this.getDefaultHomeSchema();
+    // Fallback only if slug is home
+    if (slug === 'home') {
+      return this.getDefaultHomeSchema();
+    }
+
+    return {
+      page: slug,
+      title: slug,
+      sections: []
+    };
   }
 }
 
