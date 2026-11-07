@@ -158,7 +158,9 @@ export default function Navbar() {
           <LeftLinks>
             <Link to="/category/furniture%20%26%20seating">Workstations</Link>
             <Link to="/category/technology%20%26%20monitors">Technology</Link>
-            <Link to="/">Best Sellers</Link>
+            <Link to="/pages/deals">Deals &amp; Offers</Link>
+            <Link to="/pages/ergonomics">Ergonomics Guide</Link>
+            <Link to="/pages/contact">Contact Us</Link>
           </LeftLinks>
 
           <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
