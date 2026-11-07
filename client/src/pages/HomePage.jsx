@@ -30,8 +30,36 @@ export default function HomePage() {
     async function loadLayout() {
       try {
         const data = await api.getPageLayout('home');
-        if (isMounted && data && Array.isArray(data.sections)) {
+        console.log('[HomePage] Loaded SDUI layout:', data);
+        if (isMounted && data && Array.isArray(data.sections) && data.sections.length > 0) {
           setLayout(data);
+        } else if (isMounted) {
+          console.warn('[HomePage] No sections returned from CMS, using fallback');
+          setLayout({
+            sections: [
+              {
+                id: 'fb-hero',
+                type: 'HeroBanner',
+                props: {
+                  tag: 'Commercial Workplace 2026',
+                  headline: 'The Modern Office Suite',
+                  subtitle: 'High-performance ergonomic task chairs, dual-motor sit-stand workstations, and precision monitors.',
+                  ctaText: 'Explore Workstations',
+                  ctaLink: '/category/furniture%20%26%20seating',
+                  image: '/images/ergonomic-chair.jpg'
+                }
+              },
+              {
+                id: 'fb-shelf',
+                type: 'ProductShelf',
+                props: {
+                  title: 'Best Sellers (Top Rated)',
+                  mode: 'featured',
+                  limit: 5
+                }
+              }
+            ]
+          });
         }
       } catch (err) {
         console.error('Failed to load page layout:', err);
