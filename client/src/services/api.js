@@ -86,6 +86,19 @@ export const api = {
       console.warn(`[API Fallback] Error fetching CMS layout for ${slug}`, err);
       return null;
     }
+  },
+
+  // CMS Server-Driven UI: Get dynamic navigation (Header & Footer)
+  async getNavigation() {
+    try {
+      const res = await fetch(`${API_BASE}/cms/navigation`);
+      if (!res.ok) throw new Error('Failed to fetch navigation layout');
+      const data = await res.json();
+      return data.data;
+    } catch (err) {
+      console.warn('[API Fallback] Error fetching navigation layout', err);
+      return null;
+    }
   }
 };
 
