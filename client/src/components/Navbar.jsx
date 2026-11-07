@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { Search } from 'lucide-react';
+import { Search, Menu, X } from 'lucide-react';
 import { dummyCategories } from '../data/dummyProducts';
 
 const Announcement = styled.div`
@@ -26,42 +26,74 @@ const NavHeader = styled.header`
 const NavRow = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  padding: 16px 32px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 24px;
 
-  @media (max-width: 860px) {
-    display: flex;
-    justify-content: space-between;
-    padding: 14px 16px;
+  @media (max-width: 1024px) {
+    padding: 12px 16px;
+    gap: 12px;
   }
+`;
+
+const LeftNavGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 32px;
 `;
 
 const LeftLinks = styled.div`
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 18px;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
 
-  @media (max-width: 860px) {
+  @media (max-width: 1080px) {
     display: none;
   }
 
-  a:hover {
-    opacity: 0.6;
+  a {
+    color: #333333;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+    &:hover {
+      color: #000000;
+    }
+  }
+`;
+
+const MobileMenuBtn = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #111111;
+
+  @media (max-width: 1080px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
 const Brand = styled(Link)`
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #000000;
-  text-align: center;
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
 `;
 
 const RightSection = styled.div`
@@ -69,15 +101,16 @@ const RightSection = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 16px;
+  flex-shrink: 0;
 `;
 
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
   position: relative;
-  width: 240px;
+  width: 220px;
 
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
     width: 130px;
   }
 `;
@@ -121,6 +154,11 @@ const CategoryInner = styled.div`
   overflow-x: auto;
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+    gap: 16px;
+  }
 `;
 
 const CatLink = styled(Link)`
@@ -138,8 +176,32 @@ const CatLink = styled(Link)`
   }
 `;
 
+const MobileDrawer = styled.div`
+  display: none;
+
+  @media (max-width: 960px) {
+    display: ${({ $open }) => ($open ? 'flex' : 'none')};
+    flex-direction: column;
+    background: #FFFFFF;
+    border-top: 1px solid #EEEEEE;
+    padding: 16px 20px 24px;
+    gap: 14px;
+
+    a {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #111111;
+      padding: 6px 0;
+      border-bottom: 1px solid #FAFAFA;
+    }
+  }
+`;
+
 export default function Navbar() {
   const [term, setTerm] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -147,6 +209,7 @@ export default function Navbar() {
     e.preventDefault();
     if (term.trim()) {
       navigate(`/search?q=${encodeURIComponent(term.trim())}`);
+      setMenuOpen(false);
     }
   };
 
@@ -155,29 +218,43 @@ export default function Navbar() {
       <Announcement>Free Commercial Metro Delivery On Workstation Orders Over $55</Announcement>
       <NavHeader>
         <NavRow>
-          <LeftLinks>
-            <Link to="/category/furniture%20%26%20seating">Workstations</Link>
-            <Link to="/category/technology%20%26%20monitors">Technology</Link>
-            <Link to="/pages/deals">Deals &amp; Offers</Link>
-            <Link to="/pages/ergonomics">Ergonomics Guide</Link>
-            <Link to="/pages/contact">Contact Us</Link>
-          </LeftLinks>
+          <LeftNavGroup>
+            <MobileMenuBtn onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle Navigation">
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </MobileMenuBtn>
 
-          <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
+            <Brand to="/">OFFICEWORKS // WORKPLACE</Brand>
+
+            <LeftLinks>
+              <Link to="/category/furniture%20%26%20seating">Workstations</Link>
+              <Link to="/category/technology%20%26%20monitors">Technology</Link>
+              <Link to="/pages/deals">Deals &amp; Offers</Link>
+              <Link to="/pages/ergonomics">Ergonomics Guide</Link>
+              <Link to="/pages/contact">Contact Us</Link>
+            </LeftLinks>
+          </LeftNavGroup>
 
           <RightSection>
             <SearchForm onSubmit={handleSearch}>
               <SearchIconWrap><Search size={13} /></SearchIconWrap>
               <SearchInput
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search..."
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
               />
             </SearchForm>
-            <span style={{ fontSize: 11, letterSpacing: '0.08em', fontWeight: 600 }}>ACCOUNT</span>
           </RightSection>
         </NavRow>
+
+        <MobileDrawer $open={menuOpen}>
+          <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/category/furniture%20%26%20seating" onClick={() => setMenuOpen(false)}>Workstations &amp; Seating</Link>
+          <Link to="/category/technology%20%26%20monitors" onClick={() => setMenuOpen(false)}>Technology &amp; Monitors</Link>
+          <Link to="/pages/deals" onClick={() => setMenuOpen(false)}>Clearance &amp; Deals</Link>
+          <Link to="/pages/ergonomics" onClick={() => setMenuOpen(false)}>Ergonomic Guide</Link>
+          <Link to="/pages/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+        </MobileDrawer>
 
         <CategoryBar>
           <CategoryInner>
