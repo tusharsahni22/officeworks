@@ -17,12 +17,17 @@ const FooterGrid = styled.div`
   max-width: 1440px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.5fr repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 40px;
 
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
     gap: 32px;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 `;
 
@@ -182,3 +187,4 @@ export default function Footer({ footerData }) {
     </FooterWrap>
   );
 }
+
