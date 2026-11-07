@@ -3,13 +3,15 @@ import HeroBanner from './HeroBanner';
 import ProductShelf from './ProductShelf';
 import DualFeaturette from './DualFeaturette';
 import CategoryPillsGrid from './CategoryPillsGrid';
+import ContactFormSection from './ContactFormSection';
 
 // Registry maps SDUI block types (from CMS or local JSON) to React components
 export const ComponentRegistry = {
   HeroBanner,
   ProductShelf,
   DualFeaturette,
-  CategoryPillsGrid
+  CategoryPillsGrid,
+  ContactFormSection
 };
 
 export const renderSection = (section, index) => {

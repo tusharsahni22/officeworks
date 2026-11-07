@@ -35,8 +35,125 @@ class ContentfulAdapter {
   }
 
   /**
-   * Default fallback SDUI layout for Home page
+   * Default fallback SDUI layout for Contact Us page
    */
+  getDefaultContactSchema() {
+    return {
+      page: 'contact',
+      title: 'Contact Us',
+      sections: [
+        {
+          id: 'contact-hero',
+          type: 'HeroBanner',
+          order: 1,
+          props: {
+            tag: 'Corporate Support',
+            headline: 'We Are Here to Assist Your Workplace',
+            subtitle: 'Get in touch with our dedicated commercial accounts team for bulk quotes, custom fitouts, and warranty support.',
+            ctaText: 'View Showrooms',
+            ctaLink: '#contact-form',
+            image: '/images/ergonomic-chair.jpg'
+          }
+        },
+        {
+          id: 'contact-form-sec',
+          type: 'ContactFormSection',
+          order: 2,
+          props: {
+            tag: 'Direct Enquiry',
+            title: 'Contact Corporate Sales',
+            description: 'Speak with our workplace specialists regarding volume commercial quotes, ergonomic workstation assessments, or ongoing procurement accounts.',
+            email: 'sales@officeworks-workplace.com.au',
+            phone: '1300 000 890 (Mon-Fri 8am-6pm AEST)',
+            address: '236 Bourke Street, Melbourne VIC 3000'
+          }
+        },
+        {
+          id: 'contact-pills',
+          type: 'CategoryPillsGrid',
+          order: 3,
+          props: {
+            title: 'Explore Our Product Ranges',
+            subtitle: '5 Workplace Collections',
+            categories: [
+              { name: 'Furniture & Seating', slug: 'furniture & seating', image: '/images/ergonomic-chair.jpg' },
+              { name: 'Monitors & Tech', slug: 'technology & monitors', image: '/images/curved-monitor.jpg' },
+              { name: 'Printers & Machines', slug: 'printers & machines', image: '/images/laser-printer.jpg' },
+              { name: 'Storage Units', slug: 'storage & organisation', image: '/images/filing-cabinet.jpg' },
+              { name: 'Stationery & Desk', slug: 'stationery & supplies', image: '/images/stationery-set.jpg' }
+            ]
+          }
+        }
+      ]
+    };
+  }
+
+  /**
+   * Default fallback SDUI layout for Workspace Ergonomics guide page
+   */
+  getDefaultErgonomicsSchema() {
+    return {
+      page: 'ergonomics',
+      title: 'Ergonomic Workplace Guide',
+      sections: [
+        {
+          id: 'ergo-hero',
+          type: 'HeroBanner',
+          order: 1,
+          props: {
+            tag: 'Health & Wellness at Work',
+            headline: 'Ergonomic Standards for 2026',
+            subtitle: 'AFRDI Level 6 certified seating and dual-motor sit-stand workstations designed to reduce repetitive strain and elevate daily productivity.',
+            ctaText: 'Explore Ergonomic Chairs',
+            ctaLink: '/category/furniture%20%26%20seating',
+            image: '/images/ergonomic-chair.jpg'
+          }
+        },
+        {
+          id: 'ergo-bestsellers',
+          type: 'ProductShelf',
+          order: 2,
+          props: {
+            title: 'Certified Ergonomic Seating',
+            viewAllText: 'View All Chairs',
+            viewAllLink: '/category/furniture%20%26%20seating',
+            mode: 'featured',
+            limit: 5
+          }
+        },
+        {
+          id: 'ergo-duals',
+          type: 'DualFeaturette',
+          order: 3,
+          props: {
+            leftCard: {
+              title: 'Motorised Standing Desks',
+              image: '/images/standing-desk.jpg',
+              link: '/product/2',
+              btnText: 'Explore Desks'
+            },
+            rightCard: {
+              title: 'Curved Eye-Care Displays',
+              image: '/images/curved-monitor.jpg',
+              link: '/product/3',
+              btnText: 'View Monitors'
+            }
+          }
+        },
+        {
+          id: 'ergo-contact',
+          type: 'ContactFormSection',
+          order: 4,
+          props: {
+            tag: 'Free Ergonomic Assessment',
+            title: 'Book an Office Ergonomic Consultation',
+            description: 'Our certified workplace ergonomic specialists evaluate your floor plan and provide customized workstation recommendations.'
+          }
+        }
+      ]
+    };
+  }
+
   getDefaultHomeSchema() {
     return {
       page: 'home',
@@ -156,7 +273,10 @@ class ContentfulAdapter {
           sections
         };
       } else {
-        // Page entry not found in Contentful for this slug
+        // Fallback to built-in schemas if not yet created in Contentful
+        if (slug === 'contact') return this.getDefaultContactSchema();
+        if (slug === 'ergonomics') return this.getDefaultErgonomicsSchema();
+
         return {
           page: slug,
           title: slug,
@@ -167,10 +287,10 @@ class ContentfulAdapter {
       console.warn(`[ContentfulAdapter] Failed to fetch slug '${slug}':`, err.message);
     }
 
-    // Fallback only if slug is home
-    if (slug === 'home') {
-      return this.getDefaultHomeSchema();
-    }
+    // Fallbacks if CMS request fails
+    if (slug === 'home') return this.getDefaultHomeSchema();
+    if (slug === 'contact') return this.getDefaultContactSchema();
+    if (slug === 'ergonomics') return this.getDefaultErgonomicsSchema();
 
     return {
       page: slug,
