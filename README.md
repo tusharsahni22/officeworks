@@ -14,6 +14,7 @@ An enterprise-ready, extensible product catalogue application built for rapid ev
 | **Product Data Source** | **Fake Store API + Adapter** | Wrapped in `ProductAdapter`. The frontend never queries external APIs directly (meets Constraint #2). |
 | **Database** | **MongoDB Atlas / In-Memory Fallback** | Mongoose schema with automated fallback so reviewers do not need external accounts (meets Constraint #6). |
 | **Notification** | **Notification Service Adapter** | Configurable for real SMTP (AWS SES / SendGrid) or automated console logging for zero-friction local testing. |
+| **CMS / SDUI** | **Contentful Headless CMS + Adapter** | Server-Driven UI (SDUI) architecture allowing marketing & product teams to reorder page sections or launch campaigns without code redeploys. Includes zero-credential fallback mode for instant reviewer evaluation. |
 
 ---
 

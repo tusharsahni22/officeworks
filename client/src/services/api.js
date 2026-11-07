@@ -73,6 +73,19 @@ export const api = {
       throw new Error(data.error || 'Failed to submit enquiry');
     }
     return data;
+  },
+
+  // CMS Server-Driven UI: Get page layout and dynamic component order
+  async getPageLayout(slug = 'home') {
+    try {
+      const res = await fetch(`${API_BASE}/cms/pages/${slug}`);
+      if (!res.ok) throw new Error(`Failed to fetch page layout for ${slug}`);
+      const data = await res.json();
+      return data.data;
+    } catch (err) {
+      console.warn(`[API Fallback] Error fetching CMS layout for ${slug}`, err);
+      return null;
+    }
   }
 };
 

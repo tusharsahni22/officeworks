@@ -5,6 +5,7 @@ const path = require('path');
 const productRoutes = require('./routes/products.routes');
 const categoryRoutes = require('./routes/categories.routes');
 const enquiryRoutes = require('./routes/enquiries.routes');
+const cmsRoutes = require('./routes/cms.routes');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get('/health', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/enquiries', enquiryRoutes);
+app.use('/api/cms', cmsRoutes);
 
 // Serve compiled React frontend if present (Unified Single Docker Container)
 const publicDir = path.join(__dirname, '../public');
