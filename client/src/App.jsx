@@ -140,10 +140,10 @@ export default function App() {
               <LinkCol>
                 <h5>Customer Services</h5>
                 <ul>
-                  <li><a href="#quote">Request Corporate Quote</a></li>
-                  <li><a href="#delivery">Same-Day Metro Dispatch</a></li>
-                  <li><a href="#warranty">AFRDI Certification Guidelines</a></li>
-                  <li><a href="#returns">Commercial Returns &amp; Service</a></li>
+                  <li><Link to="/pages/contact">Request Corporate Quote</Link></li>
+                  <li><Link to="/pages/deals">Commercial Deals &amp; Clearance</Link></li>
+                  <li><Link to="/pages/ergonomics">AFRDI Certification Guidelines</Link></li>
+                  <li><Link to="/pages/contact">Commercial Returns &amp; Service</Link></li>
                 </ul>
               </LinkCol>
 
