@@ -165,3 +165,4 @@ class ContentfulAdapter {
 }
 
 module.exports = new ContentfulAdapter();
+

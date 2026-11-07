@@ -25,3 +25,4 @@ export const renderSection = (section, index) => {
 };
 
 export default ComponentRegistry;
+

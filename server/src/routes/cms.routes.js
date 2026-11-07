@@ -17,3 +17,4 @@ router.get('/pages/:slug', async (req, res, next) => {
 });
 
 module.exports = router;
+
