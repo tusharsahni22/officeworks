@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import SearchPage from './pages/SearchPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import DynamicPage from './pages/DynamicPage';
 import styled from 'styled-components';
 
 const Footer = styled.footer`
@@ -107,6 +108,7 @@ export default function App() {
           <main style={{ flex: 1 }}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/pages/:slug" element={<DynamicPage />} />
               <Route path="/category/:categoryName" element={<CategoryPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
