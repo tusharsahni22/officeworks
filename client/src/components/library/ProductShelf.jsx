@@ -61,18 +61,24 @@ export default function ProductShelf({
   category = '',
   limit = 5
 }) {
+  const numLimit = Number(limit) || 5;
   let products = [];
 
   if (mode === 'featured') {
     products = [...dummyProducts]
-      .sort((a, b) => b.rating.rate - a.rating.rate)
-      .slice(0, limit);
+      .sort((a, b) => (b.rating?.rate || 0) - (a.rating?.rate || 0))
+      .slice(0, numLimit);
   } else if (category) {
     products = dummyProducts
-      .filter((p) => p.category.toLowerCase() === category.toLowerCase())
-      .slice(0, limit);
+      .filter((p) => p.category && p.category.toLowerCase().trim() === category.toLowerCase().trim())
+      .slice(0, numLimit);
   } else {
-    products = dummyProducts.slice(0, limit);
+    products = dummyProducts.slice(0, numLimit);
+  }
+
+  // Safety fallback if category filter yields no products
+  if (products.length === 0) {
+    products = dummyProducts.slice(0, numLimit);
   }
 
   return (
