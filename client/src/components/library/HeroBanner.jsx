@@ -5,18 +5,18 @@ import { ArrowRight } from 'lucide-react';
 
 const HeroSection = styled.section`
   width: 100%;
-  min-height: 500px;
-  background: linear-gradient(180deg, #0f1c2e 0%, #172a44 65%, #1e3557 100%);
+  min-height: 480px;
+  background: linear-gradient(135deg, #09131f 0%, #0f1f33 50%, #152b47 100%);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   color: #FFFFFF;
-  padding: 60px 48px;
+  padding: 64px 32px;
 
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-    min-height: 420px;
+  @media (max-width: 900px) {
+    padding: 48px 20px;
+    min-height: auto;
   }
 `;
 
@@ -25,12 +25,14 @@ const HeroContent = styled.div`
   width: 100%;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
   gap: 48px;
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: 36px;
+    text-align: center;
   }
 `;
 
@@ -39,37 +41,50 @@ const HeroLeft = styled.div`
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px 12px;
     border-radius: 9999px;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    font-weight: 500;
   }
 
   h1 {
-    font-size: 44px;
-    font-weight: 400;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    font-size: 46px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 20px;
     letter-spacing: -0.02em;
+    color: #FFFFFF;
 
-    @media (max-width: 600px) {
-      font-size: 32px;
+    @media (max-width: 900px) {
+      font-size: 34px;
+    }
+    @media (max-width: 480px) {
+      font-size: 28px;
     }
   }
 
   p {
-    font-size: 14px;
+    font-size: 15px;
     opacity: 0.85;
-    margin-bottom: 28px;
-    max-width: 440px;
-    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 520px;
+    line-height: 1.65;
+    font-weight: 300;
+
+    @media (max-width: 900px) {
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 14px;
+    }
   }
 
   a.btn {
     background: #FFFFFF;
     color: #000000;
-    padding: 12px 28px;
+    padding: 14px 32px;
     border-radius: 9999px;
     font-size: 12px;
     font-weight: 600;
@@ -78,10 +93,12 @@ const HeroLeft = styled.div`
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 
     &:hover {
-      opacity: 0.9;
+      background: #F0F0F0;
+      transform: translateY(-1px);
     }
   }
 `;
@@ -89,14 +106,38 @@ const HeroLeft = styled.div`
 const HeroRight = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   position: relative;
 
+  div.image-frame {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1.05;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 70%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(8px);
+
+    @media (max-width: 480px) {
+      max-width: 300px;
+      padding: 16px;
+    }
+  }
+
   img {
-    max-width: 440px;
-    max-height: 380px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.35));
-    border-radius: 8px;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.45));
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
   }
 `;
 
@@ -123,7 +164,11 @@ export default function HeroBanner({
         </HeroLeft>
 
         <HeroRight>
-          {image && <img src={image} alt={headline} />}
+          {image && (
+            <div className="image-frame">
+              <img src={image} alt={headline} />
+            </div>
+          )}
         </HeroRight>
       </HeroContent>
     </HeroSection>

@@ -11,9 +11,10 @@ const DualGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     grid-template-columns: 1fr;
     padding: 0 16px;
+    gap: 16px;
   }
 `;
 
@@ -22,12 +23,17 @@ const DualCard = styled(Link)`
   height: 380px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #F8F8F8;
+  background-color: #111111;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 32px;
   color: #FFFFFF;
+
+  @media (max-width: 600px) {
+    height: 280px;
+    padding: 20px;
+  }
 
   img.bg {
     position: absolute;
@@ -48,9 +54,15 @@ const DualCard = styled(Link)`
     z-index: 2;
 
     h4 {
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 22px;
+      font-weight: 500;
       margin-bottom: 12px;
+      letter-spacing: -0.01em;
+
+      @media (max-width: 600px) {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
     }
 
     span.btn-pill {

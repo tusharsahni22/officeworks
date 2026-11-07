@@ -37,21 +37,32 @@ const CategoryPillsRow = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 
-  @media (max-width: 860px) {
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 `;
 
 const CategoryTile = styled(Link)`
   border-radius: 8px;
   overflow: hidden;
-  background-color: #F5F5F5;
+  background-color: #F8F8F8;
   aspect-ratio: 1 / 1.1;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 16px;
+  border: 1px solid #EEEEEE;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  }
 
   img {
     position: absolute;
@@ -59,21 +70,29 @@ const CategoryTile = styled(Link)`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 16px;
+    padding: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
   }
 
   span.label {
     position: relative;
     z-index: 2;
     background: rgba(255, 255, 255, 0.95);
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 9999px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     align-self: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #ECECEC;
   }
 `;
 
