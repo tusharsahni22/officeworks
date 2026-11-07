@@ -8,6 +8,7 @@ import CategoryPage from './pages/CategoryPage';
 import SearchPage from './pages/SearchPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import DynamicPage from './pages/DynamicPage';
+import NotFoundPage from './pages/NotFoundPage';
 import styled from 'styled-components';
 
 const Footer = styled.footer`
@@ -112,6 +113,7 @@ export default function App() {
               <Route path="/category/:categoryName" element={<CategoryPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
           <Footer>
