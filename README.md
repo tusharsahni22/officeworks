@@ -16,14 +16,6 @@ The application is deployed live in production on AWS (Debian) with automated co
 
 ---
 
-## 📸 Application Preview
-
-| Homepage (SDUI Dynamic Layout) | Product Detail & Specifications | Corporate Enquiry Modal |
-| :---: | :---: | :---: |
-| ![Homepage](docs/screenshots/homepage.png) | ![Product Detail](docs/screenshots/product-detail.png) | ![Enquiry Modal](docs/screenshots/enquiry-modal.jpg) |
-
----
-
 ## 🛠️ Tech Stack & Architectural Highlights
 
 | Layer | Technology | Justification |
