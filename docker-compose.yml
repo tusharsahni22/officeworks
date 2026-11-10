@@ -11,21 +11,6 @@ services:
     ports:
       - "80:5000"
       - "5000:5000"
-    environment:
-      - PORT=5000
-      - NODE_ENV=production
-      - CLIENT_ORIGIN=*
-      - MONGODB_URI=${MONGODB_URI:-}
-      - FAKESTORE_API_URL=https://fakestoreapi.com
-      - SALES_INBOX_EMAIL=sales@officeworks-workplace.com.au
-      - SMTP_HOST=${SMTP_HOST:-}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USER=${SMTP_USER:-}
-      - SMTP_PASS=${SMTP_PASS:-}
-      - CONTENTFUL_SPACE_ID=${CONTENTFUL_SPACE_ID:-}
-      - CONTENTFUL_ACCESS_TOKEN=${CONTENTFUL_ACCESS_TOKEN:-}
-      - CONTENTFUL_ENVIRONMENT=${CONTENTFUL_ENVIRONMENT:-master}
-      - CONTENTFUL_MANAGEMENT_TOKEN=${CONTENTFUL_MANAGEMENT_TOKEN:-}
 
   watchtower:
     image: containrrr/watchtower
