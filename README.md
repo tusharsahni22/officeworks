@@ -16,6 +16,14 @@ The application is deployed live in production on AWS (Debian) with automated co
 
 ---
 
+## 📸 Application Preview
+
+| Homepage (SDUI Dynamic Layout) | Product Detail & Specifications | Corporate Enquiry Modal |
+| :---: | :---: | :---: |
+| ![Homepage](docs/screenshots/homepage.png) | ![Product Detail](docs/screenshots/product-detail.png) | ![Enquiry Modal](docs/screenshots/enquiry-modal.jpg) |
+
+---
+
 ## 🛠️ Tech Stack & Architectural Highlights
 
 | Layer | Technology | Justification |
@@ -27,6 +35,81 @@ The application is deployed live in production on AWS (Debian) with automated co
 | **Database** | **MongoDB Atlas / In-Memory Fallback** | Mongoose schema with automated fallback so reviewers do not need external accounts (Constraint #6). |
 | **Notification** | **Notification Service Adapter** | Configurable for real SMTP (AWS SES / SendGrid) or automated console logging for zero-friction local testing. |
 | **CMS / SDUI** | **Contentful Headless CMS + Adapter** | Server-Driven UI (SDUI) architecture allowing marketing & product teams to reorder page sections or launch campaigns without code redeploys. Includes zero-credential fallback mode for instant reviewer evaluation. |
+
+---
+
+## 📂 Project Structure
+
+```
+officeworks/
+├── client/                     # React Single Page Application (Vite)
+│   ├── public/                 # Static assets & favicon
+│   ├── src/
+│   │   ├── components/         # Atomic UI & layout components
+│   │   │   ├── Navbar.jsx      # Dynamic responsive header & search bar
+│   │   │   ├── Footer.jsx      # Dynamic responsive footer columns
+│   │   │   ├── ProductCard.jsx # Bounded aspect-ratio product tile
+│   │   │   ├── EnquiryModal.jsx# Validated B2B enquiry form & submission
+│   │   │   └── library/        # Server-Driven UI (SDUI) component blocks
+│   │   │       ├── ComponentRegistry.jsx # Dynamic CMS block mapper
+│   │   │       ├── HeroBanner.jsx
+│   │   │       ├── ProductShelf.jsx
+│   │   │       ├── DualFeaturette.jsx
+│   │   │       ├── CategoryPillsGrid.jsx
+│   │   │       ├── ContactFormSection.jsx
+│   │   │       └── ValuePropsStrip.jsx
+│   │   ├── pages/              # Routed views
+│   │   │   ├── HomePage.jsx    # CMS-driven dynamic homepage
+│   │   │   ├── CategoryPage.jsx# Top-rated + additional category grid
+│   │   │   ├── ProductDetailPage.jsx # Specifications & AFRDI certification
+│   │   │   ├── SearchPage.jsx  # Case-insensitive search results
+│   │   │   ├── DynamicPage.jsx # Catch-all CMS page renderer (/pages/:slug)
+│   │   │   └── NotFoundPage.jsx
+│   │   ├── services/
+│   │   │   └── api.js          # Unified API client (Zero client third-party calls)
+│   │   └── styles/
+│   │       ├── GlobalStyle.js
+│   │       └── theme.js        # Centralized design tokens
+│   ├── Dockerfile              # Standalone Nginx production container
+│   └── package.json
+│
+├── server/                     # Express.js REST API & Backend
+│   ├── src/
+│   │   ├── adapters/           # Decoupled external integrations
+│   │   │   ├── product.adapter.js    # Fake Store API + offline workstation catalogue
+│   │   │   └── contentful.adapter.js # Contentful CMS + fallback SDUI schemas
+│   │   ├── controllers/        # Request/response handlers
+│   │   │   ├── product.controller.js
+│   │   │   ├── category.controller.js
+│   │   │   ├── enquiry.controller.js
+│   │   │   └── cms.controller.js
+│   │   ├── routes/             # Express API route declarations
+│   │   │   ├── products.routes.js
+│   │   │   ├── categories.routes.js
+│   │   │   ├── enquiries.routes.js
+│   │   │   └── cms.routes.js
+│   │   ├── services/
+│   │   │   ├── product.service.js
+│   │   │   ├── enquiry.service.js
+│   │   │   └── notification.service.js # Sales inbox dispatcher (SMTP + console mock)
+│   │   ├── models/             # Data schemas (Enquiry, Product)
+│   │   ├── config/             # DB & environment loader
+│   │   ├── app.js              # Express app definition & route binding
+│   │   └── server.js           # Server entry point
+│   ├── tests/
+│   │   └── api.test.js         # Integration test suite (Supertest + Jest)
+│   ├── Dockerfile              # Standalone Node.js container
+│   └── package.json
+│
+├── .github/workflows/          # CI/CD Automated Pipelines
+│   └── deploy.yml              # Multi-branch build & push to Docker Hub
+├── docker-compose.yml          # Production multi-env composition + Watchtower CD
+├── Dockerfile                  # Unified production multi-stage build
+├── README.md                   # Setup guide & project overview
+├── DECISIONS.md                # Assumptions, architectural rationale & roadmap
+├── AI_USAGE.md                 # AI tooling, key prompts & error review log
+└── AGENTS.md                   # Repository engineering rules & boundaries
+```
 
 ---
 
@@ -46,28 +129,19 @@ Ensure Docker Desktop is running, then run from the project root:
 docker compose up --build
 ```
 
-- **Full Application (Frontend & Backend)**: [http://localhost:80](http://localhost:80) or [http://localhost:5000](http://localhost:5000)
+#### Exposed Local Ports:
+- **Frontend Web Application (React UI)**: [http://localhost:80](http://localhost:80) (or [http://localhost](http://localhost))
+- **Backend Express API**: [http://localhost:5000](http://localhost:5000)
 - **API Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
 
-#### 🔄 Automated Continuous Deployment (CD) with Watchtower
-For remote cloud deployments (e.g., **AWS EC2 / Lightsail / Debian**):
-
-You can launch and manage all environments with a single command without even cloning the source repository:
+#### 🔄 Cloud Deployment (AWS / Debian with Auto-CD)
+For remote cloud hosting, launch the entire multi-environment stack with a single command without cloning:
 
 ```bash
-# Download latest compose file and launch all environments
 curl -fsSL https://raw.githubusercontent.com/tusharsahni22/officeworks/main/docker-compose.yml -o docker-compose.yml && docker compose up -d
 ```
 
-This single command launches all three environments concurrently along with Watchtower:
-- **Production (`main`)**: [http://<server-ip>:80](http://<server-ip>:80) (or port `5000`)
-- **QA (`qa`)**: [http://<server-ip>:8081](http://<server-ip>:8081)
-- **Dev (`dev`)**: [http://<server-ip>:8082](http://<server-ip>:8082)
-
-#### How Auto-Deployment Works:
-1. **Zero-Config Secrets**: GitHub Actions automatically pulls repository secrets and bakes them securely into the Docker image upon release, meaning zero `.env` setup is required on your Debian instance.
-2. **Watchtower Auto-Poll**: The included `officeworks_watchtower` container polls Docker Hub every 60 seconds.
-3. **Independent Updates**: Pushing to `main` updates only the Production container on port 80; pushing to `qa` updates port 8081; pushing to `dev` updates port 8082. Old images are automatically purged (`--cleanup`) to preserve disk space.
+Runs **Production** (`:80`), **QA** (`:8081`), and **Dev** (`:8082`) with Watchtower automatically deploying new GitHub commits every 60s. *(See [DECISIONS.md](DECISIONS.md#5-automated-continuous-deployment--multi-environment-architecture) for full CD architecture).*
 
 ---
 
@@ -128,13 +202,14 @@ cd server
 npm test
 ```
 
-### Test Coverage Highlights (7/7 Suites Passing):
+### Test Coverage Highlights (7/7 tests passing, 1 test suite):
 - **Health Check**: `GET /health` returns 200 and operational status.
-- **Top 5 Featured**: `GET /api/products/featured` returns exactly the 5 highest-rated products.
+- **Top 5 Featured**: `GET /api/products/featured` returns exactly the 5 highest-rated products in descending order.
 - **Search Filtering**: `GET /api/products?search=...` tests case-insensitive keyword search against title and description.
 - **Product Lookup**: `GET /api/products/:id` validates single product specification payloads.
-- **Category Splitting**: `GET /api/categories` and `GET /api/categories/:name` verifies category discovery.
-- **Enquiry Validation**: `POST /api/enquiries` verifies data persistence, required fields, and email format rejection (400 on malformed input, 201 on success).
+- **Category Listing**: `GET /api/categories` returns available commercial product categories.
+- **Enquiry Validation**: `POST /api/enquiries` validates required fields, saves the enquiry, and returns 201 with "Thank you" confirmation.
+- **Error Handling**: `POST /api/enquiries` with invalid email format correctly rejects with 400 Bad Request.
 
 ---
 
@@ -164,6 +239,7 @@ The application incorporates a **Server-Driven UI (SDUI)** architecture backed b
 
 ## 📁 Key Documentation Files
 
-- [`DECISIONS.md`](DECISIONS.md): Architectural decisions, recorded assumptions, trade-offs, and future roadmap.
+- [`DECISIONS.md`](DECISIONS.md): Architectural decisions, recorded assumptions, trade-offs, Watchtower CD details, and future roadmap.
 - [`AI_USAGE.md`](AI_USAGE.md): AI tools used, key shaping prompts, reviewer error catches, and time-tracking breakdown.
-- [`server/.env.example`](server/.env.example): Configuration template for backend environment variables.
+- [`AGENTS.md`](AGENTS.md): Coding agent guidelines, architectural rules, and design constraints.
+- [`.env.example`](.env.example): Root configuration template for Docker and backend environment variables.
