@@ -1,53 +1,60 @@
 # DECISIONS & ASSUMPTIONS
 
-This document records all architectural choices, assumptions made where acceptance criteria left gaps, deliberate trade-offs, and how the system is designed to evolve beyond the MVP.
+This document records all architectural choices, assumptions made where acceptance criteria left deliberate gaps, requirements dropped or simplified, and how the system is engineered to scale beyond the MVP.
 
 ---
 
-## 1. Assumptions Made Where Criteria Left Gaps
+## 1. Assumptions Made Where Acceptance Criteria Were Unclear
 
 | Acceptance Criteria Gap | Assumption Made | Engineering Rationale |
 | :--- | :--- | :--- |
-| **"Top Rated" 5 Products** | Products are sorted descending by `rating.rate` (and `rating.count` as tiebreaker). The top 5 are served via `GET /api/products/featured`. | Mimics real eCommerce logic where ratings are calculated from verified customer feedback. |
-| **Category Page "Top Rated + Additional"** | For any category, the top 2 highest-rated products appear under a "Top Rated in [Category]" section, and the remainder under "Additional Products". | Gives a natural hierarchy on category pages without duplicating tiles. |
-| **Search Mechanism** | Case-insensitive substring match against `title`, `description`, and `category` performed **on the backend API** (`GET /api/products?search=...`). | Technical Constraint #2 mandates that client never calls third-party APIs directly. Filtering in the backend also matches scalable architecture rather than downloading thousands of items to the browser. |
-| **Email Delivery to Sales Inbox** | Built with an **Adapter Pattern (`NotificationService`)**. In local reviewer mode without `.env` SMTP secrets, it logs formatted emails to console and an in-memory audit log. If SMTP credentials (e.g. AWS SES / SendGrid) are provided, it dispatches real emails. | **Complies strictly with Technical Constraint #6**: reviewer does not need to create or pay for any email account to test the system in under 10 minutes. |
-| **Product Metadata Source** | Wrapped in a **`ProductAdapter`** that queries Fake Store API with fallback data. | Guarantees 100% uptime even if Fake Store API undergoes rate-limiting or downtime during evaluation. |
+| **"Top Rated" 5 Products** | Products are sorted descending by `rating.rate` with `rating.count` as tiebreaker. Served via `GET /api/products/featured`. | Reflects authentic eCommerce logic where top products are determined by customer ratings rather than arbitrary IDs. |
+| **Category Page "Top Rated + Additional"** | For any category, the top 2 highest-rated products are displayed in a "Top Rated in [Category]" shelf, followed by the remaining items under "Additional Products". | Provides clear visual hierarchy on category pages without duplicating product cards across shelves. |
+| **Search Mechanism** | Case-insensitive substring search matching against `title`, `description`, and `category`, executed on the **backend Express API** (`GET /api/products?search=...`). | **Complies with Technical Constraint #2**: Frontend never queries third-party data directly. Backend filtering also supports scale without downloading entire catalogs to client memory. |
+| **Email Delivery to Sales Inbox** | Implemented using an **Adapter Pattern (`NotificationService`)**. When SMTP credentials (AWS SES/SendGrid) are provided, real emails are sent; when omitted, it logs formatted messages to the console and an in-memory audit log. | **Complies strictly with Technical Constraint #6**: Reviewer can evaluate the full flow in under 10 minutes without signing up for paid email/SMTP accounts. |
+| **External Product Sourcing** | Encapsulated in `ProductAdapter` connecting to Fake Store API with an internal fallback dataset. | Ensures 100% test and evaluation uptime even if Fake Store API experiences rate limits, network outages, or latency. |
+| **Server-Driven UI (SDUI) & Layouts** | Contentful Headless CMS powers page composition, component ordering, and navigation. When credentials are not provided, an intelligent adapter serves default structured SDUI schemas. | Allows product and marketing teams to create new pages (`/pages/:slug`), reorder sections, and adjust copy without code deploys, while still allowing reviewers to test offline with zero paid accounts. |
 
 ---
 
 ## 2. Requirements Dropped or Simplified (and Why)
 
 1. **User Authentication & Customer Logins**:
-   * *Why Dropped:* Not in acceptance criteria. Adding login would introduce friction and distract from the critical path (Search, Browse, Detail, Enquiry).
-2. **Payment Gateway & Cart Checkout**:
-   * *Why Dropped:* The entrepreneur specified an **enquiry-first model** (B2B commercial sales desk). A cart checkout was excluded in favor of high-converting lead capture.
-3. **Complex Pagination**:
-   * *Why Simplified:* Fake Store API provides a limited catalog. Category filtering and search provide better discovery without pagination overhead at this MVP stage.
+   * *Why Dropped:* Not requested in acceptance criteria. Adding login/registration would introduce unnecessary onboarding friction and distract from the critical commercial path (Search, Browse, Detail, Enquiry).
+2. **Shopping Cart & Checkout Payment Gateway**:
+   * *Why Dropped:* The user specified a commercial workplace business model where large B2B orders (workstations, bulk fitouts) require quotes and consultation rather than consumer checkout. We prioritized a high-converting, validated **Enquiry Modal & Sales Inbox flow**.
+3. **Complex Deep Pagination**:
+   * *Why Simplified:* The sample catalog is concise. Fast category filtering and case-insensitive search provide faster discovery without the cognitive overhead of multi-page pagination.
 
 ---
 
-## 3. How the Design Supports Solution Growth Beyond the PoC
+## 3. How the Design Supports Solution Growth Beyond the MVP
 
-The entrepreneur emphasized not wanting a throwaway prototype. We implemented clear architectural boundaries:
+The system was architected from day one using **clean architectural boundaries** to prevent "throwaway" code:
 
 1. **Repository & Adapter Pattern (Data Isolation)**:
-   * The Express controllers (`product.controller.js`) and services (`product.service.js`) **never interact directly with external APIs or raw SQL/Mongo queries**.
-   * They interact with `ProductAdapter`. When switching to a production database (e.g. PostgreSQL on AWS RDS or MongoDB Atlas), **zero controller or frontend code changes**—only the adapter implementation changes.
-2. **Notification Service Abstraction**:
-   * The enquiry flow interacts with `NotificationService.sendEnquiryNotification()`. Switching from the current dev logger to AWS SES, SendGrid, or Kafka/SQS event streams requires modifying a single service file.
-3. **Token-Driven Design System (`theme.js`)**:
-   * Styled-components use a centralized token architecture (**SALT & STONE specification**). Rebranding the look and feel requires editing design tokens (`color1` through `color7`, typography, radii) without rewriting component structures.
-4. **AWS Production-Ready**:
-   * The app is containerized (`docker-compose.yml`, multi-stage Dockerfiles) and ready for AWS ECS Fargate, AWS App Runner, or Elastic Beanstalk.
+   * Express controllers (`product.controller.js`) and services (`product.service.js`) never interact directly with raw APIs or hardcoded databases.
+   * Switching the product catalog from Fake Store API to PostgreSQL on AWS RDS or MongoDB Atlas requires modifying only `product.adapter.js`—**zero changes to controllers, routes, or frontend code**.
+2. **Server-Driven UI (SDUI) & Component Library**:
+   * Built modular, reusable UI blocks (`HeroBanner`, `ProductShelf`, `DualFeaturette`, `CategoryPillsGrid`, `ContactFormSection`, `ValuePropsStrip`) mapped in `ComponentRegistry.jsx`.
+   * Any marketing specialist can create new promotional landing pages (`/pages/:slug`) directly from Contentful or JSON configuration.
+3. **AWS Cloud Production-Ready**:
+   * Fully containerized with a production multi-stage `Dockerfile` and `docker-compose.yml`.
+   * Designed for direct deployment to **AWS ECS Fargate**, **AWS App Runner**, or **Elastic Beanstalk**, with automated CI/CD pipelines targeting Docker Hub.
+4. **Token-Driven Design System (`theme.js`)**:
+   * Built on a centralized token hierarchy (`styled-components`). Global colors, typography, and spacing scales can be updated in a single file without refactoring components.
 
 ---
 
 ## 4. What We Would Do Next With Another Day
 
-1. **Database Persistence**: Add automated seeding into MongoDB Atlas / AWS DocumentDB with full Mongoose schemas and indexes on `title` and `category`.
-2. **Rate Limiting & Spam Prevention**: Implement `express-rate-limit` and reCAPTCHA v3 on the `/api/enquiries` endpoint to prevent automated bot spam.
-3. **Caching Layer**: Integrate Redis / AWS ElastiCache on `/api/products` and `/api/products/featured` with TTL invalidation.
-4. **End-to-End (E2E) Testing**: Add Cypress or Playwright tests simulating the complete user journey: Browse -> Search -> Open Modal -> Submit Enquiry -> Verify Confirmation.
-5. **Admin Dashboard**: Build an internal route `/admin/enquiries` for the sales team to review, triage, and reply to customer inquiries.
-
+1. **Persistent Cloud Database**:
+   * Connect AWS DocumentDB or MongoDB Atlas with indexed text search (`$text` index on `title` and `description`).
+2. **Enhanced Caching Layer**:
+   * Add Redis / AWS ElastiCache on `/api/products`, `/api/products/featured`, and `/api/cms/pages/*` with 60-second TTL and webhook-driven cache invalidation upon CMS publish.
+3. **Automated End-to-End (E2E) Test Suite**:
+   * Implement Playwright or Cypress workflows testing the complete browser path: Homepage -> Category filter -> Product page -> Enquiry form submission -> Sales inbox log verification.
+4. **Internal Sales CRM Dashboard**:
+   * Add a secure `/admin/enquiries` portal with status tracking (New, Quoted, Closed) and export capabilities for sales representatives.
+5. **Rate Limiting & Anti-Spam Security**:
+   * Add `express-rate-limit` and Cloudflare Turnstile / reCAPTCHA v3 on the `/api/enquiries` submission endpoint.
