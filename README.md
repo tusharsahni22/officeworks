@@ -38,13 +38,23 @@ docker compose up --build
 - **API Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
 
 #### 🔄 Automated Continuous Deployment (CD) with Watchtower
-For remote cloud deployments (e.g., **AWS EC2 / Lightsail**):
-1. Copy `docker-compose.yml` and `.env.example` to your server as `.env`.
-2. Start the services in detached mode:
-   ```bash
-   docker compose up -d
-   ```
-3. The included **Watchtower** container automatically polls Docker Hub (`tusharsahni22/officeworks:latest`) every 60 seconds. Whenever GitHub Actions finishes building and pushing new commits, Watchtower automatically detects the new image digest, pulls it, gracefully restarts the application container, and removes old images with zero manual intervention.
+For remote cloud deployments (e.g., **AWS EC2 / Lightsail / Debian**):
+
+**Single Environment (Production):**
+```bash
+docker compose up -d
+```
+Access at [http://<server-ip>:80](http://<server-ip>:80).
+
+**Multi-Environment (Dev, QA, and Production on the same server):**
+```bash
+docker compose -f docker-compose.multi.yml up -d
+```
+- **Production (`main`)**: [http://<server-ip>:80](http://<server-ip>:80) (or port `5000`)
+- **QA (`qa`)**: [http://<server-ip>:8081](http://<server-ip>:8081)
+- **Dev (`dev`)**: [http://<server-ip>:8082](http://<server-ip>:8082)
+
+The included **Watchtower** container automatically polls Docker Hub every 60 seconds and independently updates each environment whenever new commits are pushed to `main`, `qa`, or `dev`!
 
 ---
 
