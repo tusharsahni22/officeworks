@@ -48,6 +48,10 @@ jobs:
           echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> server/.env
           echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> server/.env
           echo "SMTP_SECURE=${{ secrets.SMTP_SECURE || 'false' }}" >> server/.env
+          echo "CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }}" >> server/.env
+          echo "CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }}" >> server/.env
+          echo "CONTENTFUL_ENVIRONMENT=${{ secrets.CONTENTFUL_ENVIRONMENT || 'master' }}" >> server/.env
+          echo "CONTENTFUL_MANAGEMENT_TOKEN=${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}" >> server/.env
 
       - name: Build and push Combined Docker image
         uses: docker/build-push-action@v5
