@@ -1,18 +1,20 @@
 version: '3.8'
 
 services:
-  backend:
+  app:
+    image: tusharsahni22/officeworks:${TAG:-latest}
     build:
-      context: ./server
+      context: .
       dockerfile: Dockerfile
-    container_name: product_catalogue_api
+    container_name: officeworks_workplace
     restart: unless-stopped
     ports:
+      - "80:5000"
       - "5000:5000"
     environment:
       - PORT=5000
       - NODE_ENV=production
-      - CLIENT_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:80
+      - CLIENT_ORIGIN=*
       - MONGODB_URI=${MONGODB_URI:-}
       - FAKESTORE_API_URL=https://fakestoreapi.com
       - SALES_INBOX_EMAIL=sales@officeworks-workplace.com.au
@@ -25,14 +27,15 @@ services:
       - CONTENTFUL_ENVIRONMENT=${CONTENTFUL_ENVIRONMENT:-master}
       - CONTENTFUL_MANAGEMENT_TOKEN=${CONTENTFUL_MANAGEMENT_TOKEN:-}
 
-  frontend:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    container_name: product_catalogue_client
+  watchtower:
+    image: containrrr/watchtower
+    container_name: officeworks_watchtower
     restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
+      - REPO_USER=${DOCKERHUB_USERNAME:-}
+      - REPO_PASS=${DOCKERHUB_TOKEN:-}
+    command: --interval 60 --cleanup officeworks_workplace
