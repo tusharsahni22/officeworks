@@ -40,16 +40,12 @@ docker compose up --build
 #### 🔄 Automated Continuous Deployment (CD) with Watchtower
 For remote cloud deployments (e.g., **AWS EC2 / Lightsail / Debian**):
 
-**Single Environment (Production):**
+Just run standard compose in detached mode:
 ```bash
 docker compose up -d
 ```
-Access at [http://<server-ip>:80](http://<server-ip>:80).
 
-**Multi-Environment (Dev, QA, and Production on the same server):**
-```bash
-docker compose -f docker-compose.multi.yml up -d
-```
+This single command launches all three environments concurrently along with Watchtower:
 - **Production (`main`)**: [http://<server-ip>:80](http://<server-ip>:80) (or port `5000`)
 - **QA (`qa`)**: [http://<server-ip>:8081](http://<server-ip>:8081)
 - **Dev (`dev`)**: [http://<server-ip>:8082](http://<server-ip>:8082)
