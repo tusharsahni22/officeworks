@@ -4,6 +4,18 @@ An enterprise-ready, extensible product catalogue application built for rapid ev
 
 ---
 
+## 🌐 Live Deployment
+
+The application is deployed live in production on AWS (Debian) with automated continuous deployment (CD) via Docker Hub and Watchtower:
+
+- **Live Production URL**: [https://officework.mrsahni.tech/](https://officework.mrsahni.tech/)
+- **Live API Health Check**: [https://officework.mrsahni.tech/health](https://officework.mrsahni.tech/health)
+- **Live Deals & Offers**: [https://officework.mrsahni.tech/pages/deals](https://officework.mrsahni.tech/pages/deals)
+- **Live Ergonomics Guide**: [https://officework.mrsahni.tech/pages/ergonomics](https://officework.mrsahni.tech/pages/ergonomics)
+- **Live Corporate Enquiries**: [https://officework.mrsahni.tech/pages/contact](https://officework.mrsahni.tech/pages/contact)
+
+---
+
 ## 🛠️ Tech Stack & Architectural Highlights
 
 | Layer | Technology | Justification |
@@ -40,9 +52,11 @@ docker compose up --build
 #### 🔄 Automated Continuous Deployment (CD) with Watchtower
 For remote cloud deployments (e.g., **AWS EC2 / Lightsail / Debian**):
 
-Just run standard compose in detached mode:
+You can launch and manage all environments with a single command without even cloning the source repository:
+
 ```bash
-docker compose up -d
+# Download latest compose file and launch all environments
+curl -fsSL https://raw.githubusercontent.com/tusharsahni22/officeworks/main/docker-compose.yml -o docker-compose.yml && docker compose up -d
 ```
 
 This single command launches all three environments concurrently along with Watchtower:
@@ -50,7 +64,10 @@ This single command launches all three environments concurrently along with Watc
 - **QA (`qa`)**: [http://<server-ip>:8081](http://<server-ip>:8081)
 - **Dev (`dev`)**: [http://<server-ip>:8082](http://<server-ip>:8082)
 
-The included **Watchtower** container automatically polls Docker Hub every 60 seconds and independently updates each environment whenever new commits are pushed to `main`, `qa`, or `dev`!
+#### How Auto-Deployment Works:
+1. **Zero-Config Secrets**: GitHub Actions automatically pulls repository secrets and bakes them securely into the Docker image upon release, meaning zero `.env` setup is required on your Debian instance.
+2. **Watchtower Auto-Poll**: The included `officeworks_watchtower` container polls Docker Hub every 60 seconds.
+3. **Independent Updates**: Pushing to `main` updates only the Production container on port 80; pushing to `qa` updates port 8081; pushing to `dev` updates port 8082. Old images are automatically purged (`--cleanup`) to preserve disk space.
 
 ---
 
@@ -126,9 +143,9 @@ npm test
 The application incorporates a **Server-Driven UI (SDUI)** architecture backed by **Contentful Headless CMS**:
 - **Homepage (`/`)**: Dynamically renders modular sections (`HeroBanner`, `ValuePropsStrip`, `ProductShelf`, `DualFeaturette`, `CategoryPillsGrid`) in the exact order configured in CMS.
 - **Dynamic CMS Pages (`/pages/:slug`)**:
-  - [http://localhost:5174/pages/deals](http://localhost:5174/pages/deals) (Commercial clearance & promotions)
-  - [http://localhost:5174/pages/ergonomics](http://localhost:5174/pages/ergonomics) (Workplace Ergonomics Guide)
-  - [http://localhost:5174/pages/contact](http://localhost:5174/pages/contact) (Corporate support & direct enquiry form)
+  - Live: [https://officework.mrsahni.tech/pages/deals](https://officework.mrsahni.tech/pages/deals) (Local: `http://localhost:5000/pages/deals`)
+  - Live: [https://officework.mrsahni.tech/pages/ergonomics](https://officework.mrsahni.tech/pages/ergonomics) (Local: `http://localhost:5000/pages/ergonomics`)
+  - Live: [https://officework.mrsahni.tech/pages/contact](https://officework.mrsahni.tech/pages/contact) (Local: `http://localhost:5000/pages/contact`)
 - **Header & Footer**: Navigation links, announcements, and footer columns are fully CMS-driven.
 - **Reviewer Fallback Mode**: If Contentful credentials are omitted from `.env`, the adapter automatically serves structured fallback layouts, guaranteeing zero setup friction.
 
