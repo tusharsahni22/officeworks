@@ -58,3 +58,22 @@ The system was architected from day one using **clean architectural boundaries**
    * Add a secure `/admin/enquiries` portal with status tracking (New, Quoted, Closed) and export capabilities for sales representatives.
 5. **Rate Limiting & Anti-Spam Security**:
    * Add `express-rate-limit` and Cloudflare Turnstile / reCAPTCHA v3 on the `/api/enquiries` submission endpoint.
+
+---
+
+## 5. Automated Continuous Deployment & Multi-Environment Architecture
+
+To satisfy Requirement #3 (AWS Compatibility) and eliminate manual server maintenance, we implemented a continuous deployment pipeline pairing GitHub Actions with an automated Docker watcher:
+
+1. **GitHub Actions Image Build & Secret Baking**:
+   * On pushes to `main`, `qa`, or `dev`, `.github/workflows/deploy.yml` generates `.env` from repository secrets and builds a unified multi-stage container (`Dockerfile`).
+   * The image is published to Docker Hub (`tusharsahni22/officeworks:latest`, `:qa`, `:dev`).
+   * Baking configuration into the image guarantees zero setup friction on remote cloud hosts—no manual `.env` file management or secret leaking on host disks.
+2. **Autonomous CD via Watchtower**:
+   * The host server runs `containrrr/watchtower` via `docker-compose.yml`, which polls Docker Hub every 60 seconds over the local Docker daemon socket (`/var/run/docker.sock`).
+   * When an updated image digest is detected, Watchtower automatically performs a graceful rolling restart of the target container with `--cleanup` to remove obsolete image layers.
+3. **Multi-Environment Port Segregation**:
+   * Production (`main` / `:latest`): Port `80` (App) and `5000` (API)
+   * QA / Staging (`qa` / `:qa`): Port `8081`
+   * Development (`dev` / `:dev`): Port `8082`
+   * Enables rapid multi-branch validation on a single host without port collision.
