@@ -1,17 +1,47 @@
 version: '3.8'
 
+# Multi-Environment Compose (Production, QA, Dev) + Watchtower CD
+# Runs all 3 environments concurrently on different ports with automated Watchtower updates
+
 services:
-  app:
-    image: tusharsahni22/officeworks:${TAG:-latest}
+  # ========================================================
+  # PRODUCTION / MAIN ENVIRONMENT (Port 80 & 5000)
+  # ========================================================
+  app-main:
+    image: tusharsahni22/officeworks:latest
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: officeworks_workplace
+    container_name: officeworks_prod
     restart: unless-stopped
     ports:
       - "80:5000"
       - "5000:5000"
 
+  # ========================================================
+  # QA / STAGING ENVIRONMENT (Port 8081)
+  # ========================================================
+  app-qa:
+    image: tusharsahni22/officeworks:qa
+    container_name: officeworks_qa
+    restart: unless-stopped
+    ports:
+      - "8081:5000"
+
+  # ========================================================
+  # DEVELOPMENT ENVIRONMENT (Port 8082)
+  # ========================================================
+  app-dev:
+    image: tusharsahni22/officeworks:dev
+    container_name: officeworks_dev
+    restart: unless-stopped
+    ports:
+      - "8082:5000"
+
+  # ========================================================
+  # WATCHTOWER: Automated CD Image Watcher
+  # Polls Docker Hub every 60s and independently updates containers
+  # ========================================================
   watchtower:
     image: containrrr/watchtower
     container_name: officeworks_watchtower
@@ -21,6 +51,4 @@ services:
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=60
-      - REPO_USER=${DOCKERHUB_USERNAME:-}
-      - REPO_PASS=${DOCKERHUB_TOKEN:-}
-    command: --interval 60 --cleanup officeworks_workplace
+    command: --interval 60 --cleanup officeworks_prod officeworks_qa officeworks_dev
