@@ -34,9 +34,17 @@ Ensure Docker Desktop is running, then run from the project root:
 docker compose up --build
 ```
 
-- **Frontend Client**: [http://localhost:80](http://localhost:80) (or mapped port)
-- **Backend API**: [http://localhost:5000](http://localhost:5000)
-- **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+- **Full Application (Frontend & Backend)**: [http://localhost:80](http://localhost:80) or [http://localhost:5000](http://localhost:5000)
+- **API Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+
+#### 🔄 Automated Continuous Deployment (CD) with Watchtower
+For remote cloud deployments (e.g., **AWS EC2 / Lightsail**):
+1. Copy `docker-compose.yml` and `.env.example` to your server as `.env`.
+2. Start the services in detached mode:
+   ```bash
+   docker compose up -d
+   ```
+3. The included **Watchtower** container automatically polls Docker Hub (`tusharsahni22/officeworks:latest`) every 60 seconds. Whenever GitHub Actions finishes building and pushing new commits, Watchtower automatically detects the new image digest, pulls it, gracefully restarts the application container, and removes old images with zero manual intervention.
 
 ---
 
