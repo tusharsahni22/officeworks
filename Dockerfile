@@ -15,10 +15,15 @@ COPY server/package*.json ./
 RUN npm ci --only=production
 
 # Copy server code
-COPY server/ ./src/
+COPY server/src ./src
 
 # Copy the compiled client frontend build directly into server's public directory
 COPY --from=client-builder /app/client/dist ./public
+
+# Copy the generated .env file from GitHub Actions into the image root and src/
+# Uses wildcard so local development builds without .env still succeed gracefully
+COPY server/.env* ./
+COPY server/.env* ./src/
 
 # Environment defaults
 ENV PORT=5000
@@ -27,4 +32,3 @@ ENV NODE_ENV=production
 EXPOSE 5000
 
 CMD ["node", "src/server.js"]
-
