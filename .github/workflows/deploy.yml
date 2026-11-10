@@ -35,9 +35,9 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USERNAME }}"
           password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
-      - name: Generate server .env file
+      - name: Generate server .env file from GitHub Secrets
         run: |
-          echo "PORT=5000" >> server/.env
+          echo "PORT=5000" > server/.env
           echo "NODE_ENV=production" >> server/.env
           echo "CLIENT_ORIGIN=${{ secrets.CLIENT_ORIGIN || '*' }}" >> server/.env
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> server/.env
@@ -52,6 +52,7 @@ jobs:
           echo "CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }}" >> server/.env
           echo "CONTENTFUL_ENVIRONMENT=${{ secrets.CONTENTFUL_ENVIRONMENT || 'master' }}" >> server/.env
           echo "CONTENTFUL_MANAGEMENT_TOKEN=${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}" >> server/.env
+          cp server/.env .env
 
       - name: Build and push Combined Docker image
         uses: docker/build-push-action@v5

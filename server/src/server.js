@@ -1,4 +1,9 @@
+const path = require('path');
+// Load .env from current directory, parent directory (/app/.env in Docker), or server folder
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 require('dotenv').config();
+
 const app = require('./app');
 const connectDB = require('./config/db');
 
